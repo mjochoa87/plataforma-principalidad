@@ -175,6 +175,34 @@
   .home-section-card.s-qr::before   { background: linear-gradient(90deg,#009ee3,#00c4ff); }
   .home-section-card.s-ia::before   { background: linear-gradient(90deg,#f7b731,#f0932b); }
   .home-section-card.s-files::before{ background: linear-gradient(90deg,#00b09b,#96c93d); }
+  .home-section-card.s-pres::before { background: linear-gradient(90deg,#2c3e50,#3498db); }
+
+  /* PRESENCIALIDAD CALENDAR */
+  .pres-legend { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:20px; background:#fff; border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow); }
+  .pres-chip { display:inline-block; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700; color:#fff; }
+  .pres-chip-M { background:#009ee3; }
+  .pres-chip-A { background:#00a650; }
+  .pres-chip-F { background:#f0a500; }
+  .pres-chip-T { background:#9b59b6; }
+  .pres-month-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .pres-month-btn { border:1.5px solid var(--mp-gray-200); background:#fff; color:var(--mp-gray-600); border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+  .pres-month-btn.active { border-color:var(--mp-blue); color:var(--mp-blue); background:var(--mp-blue-light); }
+  .pres-month-btn:hover { border-color:var(--mp-blue); color:var(--mp-blue); }
+  .pres-calendar { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+  .pres-cal-head { display:grid; grid-template-columns:repeat(7,1fr); }
+  .pres-cal-head span { padding:10px 4px; text-align:center; font-size:12px; font-weight:700; background:#2c3e50; color:#fff; }
+  .pres-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); }
+  .pres-cal-cell { min-height:82px; padding:8px 6px; border-right:1px solid var(--mp-gray-200); border-bottom:1px solid var(--mp-gray-200); }
+  .pres-cal-cell.empty { background:var(--mp-gray-100); }
+  .pres-cal-cell.weekend { background:#f9f9f9; }
+  .pres-cal-cell.feriado-day { background:#fff8e6; }
+  .pres-cal-cell.nooffice { background:#fdfdfd; }
+  .pres-cal-cell.office-day { background:#fff; }
+  .pres-day-num { font-size:13px; font-weight:700; color:var(--mp-gray-900); margin-bottom:4px; }
+  .pres-day-num.feriado-num { color:#f0a500; }
+  .pres-teams { display:flex; flex-wrap:wrap; gap:2px; margin-bottom:3px; }
+  .feriado-label { font-size:9px; color:#e67e22; font-weight:700; line-height:1.3; margin-top:2px; }
+  .pres-total { font-size:10px; color:var(--mp-gray-400); margin-top:2px; }
 
   /* FLYERS GALLERY */
   .flyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 8px; }
@@ -372,7 +400,7 @@
           <div class="home-section-desc">Material visual de Mercado Pago: propuesta de valor, herramientas y cuotas.</div>
         </div>
         <div class="home-section-meta">
-          <span class="home-section-count">10 flyers disponibles</span>
+          <span class="home-section-count">19 flyers disponibles</span>
           <button class="home-section-cta">Ver flyers →</button>
         </div>
       </div>
@@ -386,6 +414,18 @@
         <div class="home-section-meta">
           <span class="home-section-count">3 planillas disponibles</span>
           <button class="home-section-cta">Ir a planillas →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-pres" onclick="navTo('presencialidad')">
+        <div class="home-section-icon">📅</div>
+        <div>
+          <div class="home-section-name">Presencialidad</div>
+          <div class="home-section-desc">Calendario visual de asistencia al cowork por equipo — Julio a Diciembre 2026.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">Jul–Dic 2026</span>
+          <button class="home-section-cta">Ver calendario →</button>
         </div>
       </div>
 
@@ -825,6 +865,42 @@
         <img src="https://drive.google.com/thumbnail?id=1xCMRITbS9Ql5jvZRY-WqpgLIJaCA25v9&sz=w600" alt="Cobros con QR" loading="lazy">
         <div class="flyer-item-label">Cobros con QR</div>
       </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1IZmf1TrgicPV7YsFknR8In1VY2QGtsS2&sz=w1200','Flyers Ópticas y Salud','1IZmf1TrgicPV7YsFknR8In1VY2QGtsS2')">
+        <img src="https://drive.google.com/thumbnail?id=1IZmf1TrgicPV7YsFknR8In1VY2QGtsS2&sz=w600" alt="Flyers Ópticas y Salud" loading="lazy">
+        <div class="flyer-item-label">Flyers Ópticas y Salud</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1MNBemuGZkm_YyeUn5BbhgnlVFcEEwjqy&sz=w1200','Día del Padre','1MNBemuGZkm_YyeUn5BbhgnlVFcEEwjqy')">
+        <img src="https://drive.google.com/thumbnail?id=1MNBemuGZkm_YyeUn5BbhgnlVFcEEwjqy&sz=w600" alt="Día del Padre" loading="lazy">
+        <div class="flyer-item-label">Día del Padre</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1Xk23A3C429kBflPTfRmGgzQ6RLUXNi8v&sz=w1200','Propuesta de Valor','1Xk23A3C429kBflPTfRmGgzQ6RLUXNi8v')">
+        <img src="https://drive.google.com/thumbnail?id=1Xk23A3C429kBflPTfRmGgzQ6RLUXNi8v&sz=w600" alt="Propuesta de Valor" loading="lazy">
+        <div class="flyer-item-label">Propuesta de Valor</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1m8ldeNwxQueP2o2SMviiaO37y7bpZbi2&sz=w1200','Rendimiento vs Fondo FIMA','1m8ldeNwxQueP2o2SMviiaO37y7bpZbi2')">
+        <img src="https://drive.google.com/thumbnail?id=1m8ldeNwxQueP2o2SMviiaO37y7bpZbi2&sz=w600" alt="Rendimiento vs Fondo FIMA" loading="lazy">
+        <div class="flyer-item-label">Rendimiento vs Fondo FIMA</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1CzIfo2RiX4Bq4TF39eNxFbAzyLxQCaG5&sz=w1200','Cuotas MP','1CzIfo2RiX4Bq4TF39eNxFbAzyLxQCaG5')">
+        <img src="https://drive.google.com/thumbnail?id=1CzIfo2RiX4Bq4TF39eNxFbAzyLxQCaG5&sz=w600" alt="Cuotas MP" loading="lazy">
+        <div class="flyer-item-label">Cuotas MP</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1wJ07mBbsxQaorYXBurvIw7dMHhKnK2yy&sz=w1200','Flyer MP (5)','1wJ07mBbsxQaorYXBurvIw7dMHhKnK2yy')">
+        <img src="https://drive.google.com/thumbnail?id=1wJ07mBbsxQaorYXBurvIw7dMHhKnK2yy&sz=w600" alt="Flyer MP (5)" loading="lazy">
+        <div class="flyer-item-label">Flyer MP (5)</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=118i9mfSqFQuaOaYdVKz0fk2NidlDttbd&sz=w1200','Flyer MP (6)','118i9mfSqFQuaOaYdVKz0fk2NidlDttbd')">
+        <img src="https://drive.google.com/thumbnail?id=118i9mfSqFQuaOaYdVKz0fk2NidlDttbd&sz=w600" alt="Flyer MP (6)" loading="lazy">
+        <div class="flyer-item-label">Flyer MP (6)</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1QJzVEaelQMwX3DMxTRXo5SNguioLJKji&sz=w1200','Flyer MP (7)','1QJzVEaelQMwX3DMxTRXo5SNguioLJKji')">
+        <img src="https://drive.google.com/thumbnail?id=1QJzVEaelQMwX3DMxTRXo5SNguioLJKji&sz=w600" alt="Flyer MP (7)" loading="lazy">
+        <div class="flyer-item-label">Flyer MP (7)</div>
+      </div>
+      <div class="flyer-item" onclick="openFlyer('https://drive.google.com/thumbnail?id=1WhZiKvssylocSmjxqNFNM33uJ2JHM8Tn&sz=w1200','Flyer MP (8)','1WhZiKvssylocSmjxqNFNM33uJ2JHM8Tn')">
+        <img src="https://drive.google.com/thumbnail?id=1WhZiKvssylocSmjxqNFNM33uJ2JHM8Tn&sz=w600" alt="Flyer MP (8)" loading="lazy">
+        <div class="flyer-item-label">Flyer MP (8)</div>
+      </div>
     </div>
 
     <!-- Lightbox -->
@@ -961,6 +1037,38 @@
     </div>
   </div>
 
+  <!-- ══════════════ PRESENCIALIDAD ══════════════ -->
+  <div id="presencialidad" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">📅 Presencialidad</div>
+      <div class="page-subtitle">Calendario de asistencia al cowork — Julio a Diciembre 2026</div>
+    </div>
+
+    <div class="pres-legend">
+      <span style="font-size:12px;font-weight:700;color:var(--mp-gray-600)">Equipos:</span>
+      <span class="pres-chip pres-chip-M" style="font-size:12px;padding:4px 12px">🔵 Majo · 13p</span>
+      <span class="pres-chip pres-chip-A" style="font-size:12px;padding:4px 12px">🟢 Ani · 13p</span>
+      <span class="pres-chip pres-chip-F" style="font-size:12px;padding:4px 12px">🟠 Fran · 12p</span>
+      <span class="pres-chip pres-chip-T" style="font-size:12px;padding:4px 12px">🟣 Tomi · 12p</span>
+      <span style="margin-left:8px;font-size:12px;color:var(--mp-gray-600);font-weight:700">Capacidad (máx 40p):</span>
+      <span style="font-size:12px;color:var(--mp-gray-600)">🟢 ≤34p &nbsp;🟡 35–40p &nbsp;🔴 &gt;40p</span>
+    </div>
+
+    <div class="pres-month-nav" id="presMonthNav"></div>
+    <div class="pres-calendar" id="presCalendar">
+      <div style="padding:40px;text-align:center;color:var(--mp-gray-400)">Cargando calendario...</div>
+    </div>
+
+    <div style="margin-top:14px;text-align:right">
+      <a href="https://docs.google.com/spreadsheets/d/1bZPoM5g9n9flcqjbw_JaBLB4Uk1TOJWNnENre2YBqDo/edit?gid=1714008600"
+         target="_blank"
+         style="font-size:12px;color:var(--mp-blue);font-weight:600;text-decoration:none">
+        ↗ Ver planilla completa en Sheets
+      </a>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -1047,6 +1155,91 @@
     document.getElementById('flyerLightbox').classList.remove('open');
     document.getElementById('flyerLightboxImg').src = '';
   }
+
+  // ─── PRESENCIALIDAD CALENDAR ───────────────────────────────────────
+  const PRES_DATA = {
+    '2026-07-02':{t:['A','F','T'],p:37},'2026-07-03':{t:['M','T'],p:25},
+    '2026-07-06':{t:['A','F','T'],p:37},'2026-07-08':{t:['A','M','F'],p:38},
+    '2026-07-09':{feriado:'Independencia'},'2026-07-10':{t:['M','T'],p:25},
+    '2026-07-13':{t:['M','F','T'],p:37},'2026-07-16':{t:['A','M','F'],p:38},
+    '2026-07-17':{t:['A','T'],p:25},'2026-07-20':{t:['A','M','F'],p:38},
+    '2026-07-22':{t:['A','F','T'],p:37},'2026-07-23':{t:['M','T'],p:25},
+    '2026-07-27':{t:['A','M','T'],p:38},'2026-07-30':{t:['A','F','T'],p:37},
+    '2026-07-31':{t:['M','F'],p:25},
+    '2026-08-03':{t:['A','F','T'],p:37},'2026-08-05':{t:['A','M','F'],p:38},
+    '2026-08-07':{t:['M','T'],p:25},'2026-08-10':{t:['M','F','T'],p:37},
+    '2026-08-13':{t:['A','M','F'],p:38},'2026-08-14':{t:['A','T'],p:25},
+    '2026-08-17':{feriado:'San Martín'},'2026-08-19':{t:['A','F','T'],p:37},
+    '2026-08-21':{t:['A','M','F'],p:38},'2026-08-24':{t:['A','M','T'],p:38},
+    '2026-08-27':{t:['A','F','T'],p:37},'2026-08-28':{t:['M','F'],p:25},
+    '2026-08-31':{t:['A','F','T'],p:37},
+    '2026-09-02':{t:['A','M','F'],p:38},'2026-09-04':{t:['M','T'],p:25},
+    '2026-09-07':{t:['M','F','T'],p:37},'2026-09-10':{t:['A','M','F'],p:38},
+    '2026-09-11':{t:['A','T'],p:25},'2026-09-14':{t:['A','M','F'],p:38},
+    '2026-09-16':{t:['A','F','T'],p:37},'2026-09-17':{t:['M','T'],p:25},
+    '2026-09-21':{t:['A','M','T'],p:38},'2026-09-24':{t:['A','F','T'],p:37},
+    '2026-09-25':{t:['M','F'],p:25},'2026-09-28':{t:['A','F','T'],p:37},
+    '2026-09-30':{t:['A','M','F'],p:38},
+    '2026-10-01':{t:['M','T'],p:25},'2026-10-05':{t:['M','F','T'],p:37},
+    '2026-10-08':{t:['A','M','F'],p:38},'2026-10-09':{t:['A','T'],p:25},
+    '2026-10-12':{feriado:'Diversidad Cultural'},'2026-10-14':{t:['A','F','T'],p:37},
+    '2026-10-15':{t:['A','M','F'],p:38},'2026-10-19':{t:['A','M','T'],p:38},
+    '2026-10-22':{t:['A','F','T'],p:37},'2026-10-23':{t:['M','F'],p:25},
+    '2026-10-26':{t:['A','F','T'],p:37},'2026-10-28':{t:['A','M','F'],p:38},
+    '2026-10-29':{t:['M','T'],p:25},
+    '2026-11-02':{t:['M','F','T'],p:37},'2026-11-05':{t:['A','M','F'],p:38},
+    '2026-11-06':{t:['A','T'],p:25},'2026-11-09':{t:['A','M','F'],p:38},
+    '2026-11-11':{t:['A','F','T'],p:37},'2026-11-12':{t:['M','T'],p:25},
+    '2026-11-16':{t:['A','M','T'],p:38},'2026-11-19':{t:['A','F','T'],p:37},
+    '2026-11-20':{feriado:'Soberanía'},'2026-11-23':{t:['A','F','T'],p:37},
+    '2026-11-25':{t:['A','M','F'],p:38},'2026-11-26':{t:['M','T'],p:25},
+    '2026-11-30':{t:['M','F','T'],p:37},
+    '2026-12-03':{t:['A','M','F'],p:38},'2026-12-04':{t:['A','T'],p:25},
+    '2026-12-07':{t:['A','M','F'],p:38},'2026-12-09':{t:['A','F','T'],p:37},
+    '2026-12-10':{t:['M','T'],p:25},'2026-12-14':{t:['A','M','T'],p:38},
+    '2026-12-17':{t:['A','F','T'],p:37},'2026-12-18':{t:['M','F'],p:25},
+    '2026-12-21':{t:['A','F','T'],p:37},'2026-12-23':{t:['A','M','F'],p:38},
+    '2026-12-24':{t:['M','T'],p:25},'2026-12-25':{feriado:'Navidad'}
+  };
+  const PRES_MONTHS=[{n:'Julio',m:7},{n:'Agosto',m:8},{n:'Septiembre',m:9},{n:'Octubre',m:10},{n:'Noviembre',m:11},{n:'Diciembre',m:12}];
+  const PRES_DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const PRES_TNAMES={M:'Majo',A:'Ani',F:'Fran',T:'Tomi'};
+
+  function initPres(){
+    const nav=document.getElementById('presMonthNav');
+    if(!nav)return;
+    nav.innerHTML=PRES_MONTHS.map((m,i)=>`<button class="pres-month-btn${i===0?' active':''}" onclick="showPresMonth(${m.m})">${m.n}</button>`).join('');
+    renderPres(7);
+  }
+  function showPresMonth(m){
+    document.querySelectorAll('.pres-month-btn').forEach((b,i)=>b.classList.toggle('active',i+7===m));
+    renderPres(m);
+  }
+  function renderPres(month){
+    const cal=document.getElementById('presCalendar');
+    if(!cal)return;
+    const y=2026, first=new Date(y,month-1,1), last=new Date(y,month,0);
+    let h='<div class="pres-cal-head">'+PRES_DAYS.map(d=>`<span>${d}</span>`).join('')+'</div><div class="pres-cal-grid">';
+    for(let i=0;i<first.getDay();i++) h+='<div class="pres-cal-cell empty"></div>';
+    for(let d=1;d<=last.getDate();d++){
+      const dow=new Date(y,month-1,d).getDay(), wknd=dow===0||dow===6;
+      const key=`${y}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const info=PRES_DATA[key];
+      let cls='pres-cal-cell '+(wknd?'weekend':info?.feriado?'feriado-day':info?.t?'office-day':'nooffice');
+      h+=`<div class="${cls}"><div class="pres-day-num${info?.feriado?' feriado-num':''}">${d}</div>`;
+      if(info?.feriado) h+=`<div class="feriado-label">🎉 ${info.feriado}</div>`;
+      else if(info?.t){
+        h+='<div class="pres-teams">'+info.t.map(t=>`<span class="pres-chip pres-chip-${t}">${PRES_TNAMES[t]}</span>`).join('')+'</div>';
+        const e=info.p>40?'🔴':info.p>=35?'🟡':'🟢';
+        h+=`<div class="pres-total">${e} ${info.p}p</div>`;
+      }
+      h+='</div>';
+    }
+    const rem=(7-((first.getDay()+last.getDate())%7))%7;
+    for(let i=0;i<rem;i++) h+='<div class="pres-cal-cell empty"></div>';
+    cal.innerHTML=h+'</div>';
+  }
+  initPres();
 </script>
 </body>
 </html>
