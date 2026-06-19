@@ -203,6 +203,8 @@
   .pres-teams { display:flex; flex-wrap:wrap; gap:2px; margin-bottom:3px; }
   .feriado-label { font-size:9px; color:#e67e22; font-weight:700; line-height:1.3; margin-top:2px; }
   .pres-total { font-size:10px; color:var(--mp-gray-400); margin-top:2px; }
+  .pres-cal-cell.pendiente-day { background:repeating-linear-gradient(45deg,#fff,#fff 5px,#fdf6e3 5px,#fdf6e3 10px); border:1.5px dashed #f0a500; }
+  .pendiente-label { font-size:9px; color:#e67e22; font-weight:700; line-height:1.3; margin-top:2px; }
 
   /* FLYERS GALLERY */
   .flyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 8px; }
@@ -1160,10 +1162,10 @@
   const PRES_DATA = {
     '2026-07-02':{t:['A','F','T'],p:37},'2026-07-03':{t:['M','T'],p:25},
     '2026-07-06':{t:['A','F','T'],p:37},'2026-07-08':{t:['A','M','F'],p:38},
-    '2026-07-09':{feriado:'Independencia'},'2026-07-10':{t:['M','T'],p:25},
+    '2026-07-09':{feriado:'Independencia'},'2026-07-10':{pendiente:true},
     '2026-07-13':{t:['M','F','T'],p:37},'2026-07-16':{t:['A','M','F'],p:38},
     '2026-07-17':{t:['A','T'],p:25},'2026-07-20':{t:['A','M','F'],p:38},
-    '2026-07-22':{t:['A','F','T'],p:37},'2026-07-23':{t:['M','T'],p:25},
+    '2026-07-22':{t:['A','F','T'],p:37},'2026-07-23':{t:['M','T'],p:25},'2026-07-25':{t:['M','A','F','T'],p:50},
     '2026-07-27':{t:['A','M','T'],p:38},'2026-07-30':{t:['A','F','T'],p:37},
     '2026-07-31':{t:['M','F'],p:25},
     '2026-08-03':{t:['A','F','T'],p:37},'2026-08-05':{t:['A','M','F'],p:38},
@@ -1225,9 +1227,10 @@
       const dow=new Date(y,month-1,d).getDay(), wknd=dow===0||dow===6;
       const key=`${y}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const info=PRES_DATA[key];
-      let cls='pres-cal-cell '+(wknd?'weekend':info?.feriado?'feriado-day':info?.t?'office-day':'nooffice');
+      let cls='pres-cal-cell '+(info?.pendiente?'pendiente-day':wknd&&!info?.t?'weekend':info?.feriado?'feriado-day':info?.t?'office-day':'nooffice');
       h+=`<div class="${cls}"><div class="pres-day-num${info?.feriado?' feriado-num':''}">${d}</div>`;
-      if(info?.feriado) h+=`<div class="feriado-label">🎉 ${info.feriado}</div>`;
+      if(info?.pendiente) h+=`<div class="pendiente-label">⏳ Pendiente</div>`;
+      else if(info?.feriado) h+=`<div class="feriado-label">🎉 ${info.feriado}</div>`;
       else if(info?.t){
         h+='<div class="pres-teams">'+info.t.map(t=>`<span class="pres-chip pres-chip-${t}">${PRES_TNAMES[t]}</span>`).join('')+'</div>';
         const e=info.p>40?'🔴':info.p>=35?'🟡':'🟢';
