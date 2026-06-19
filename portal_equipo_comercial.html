@@ -174,6 +174,7 @@
   .home-section-card.s-vid::before  { background: linear-gradient(90deg,#ff4757,#ff6b81); }
   .home-section-card.s-qr::before   { background: linear-gradient(90deg,#009ee3,#00c4ff); }
   .home-section-card.s-ia::before   { background: linear-gradient(90deg,#f7b731,#f0932b); }
+  .home-section-card.s-files::before{ background: linear-gradient(90deg,#00b09b,#96c93d); }
 
   /* FLYERS GALLERY */
   .flyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 8px; }
@@ -323,7 +324,7 @@
           <div class="home-section-desc">Generador de PDF, simulador de comparativas, manual de leads y accesos a Grid.</div>
         </div>
         <div class="home-section-meta">
-          <span class="home-section-count">4 herramientas disponibles</span>
+          <span class="home-section-count">5 herramientas disponibles</span>
           <button class="home-section-cta">Ir a herramientas →</button>
         </div>
       </div>
@@ -373,6 +374,18 @@
         <div class="home-section-meta">
           <span class="home-section-count">10 flyers disponibles</span>
           <button class="home-section-cta">Ver flyers →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-files" onclick="navTo('files')">
+        <div class="home-section-icon">📂</div>
+        <div>
+          <div class="home-section-name">Files de cargas de pedidos</div>
+          <div class="home-section-desc">Planillas de carga para suscripción, pedido de Point y pedido de CUIT.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">3 planillas disponibles</span>
+          <button class="home-section-cta">Ir a planillas →</button>
         </div>
       </div>
 
@@ -620,6 +633,20 @@
         </div>
       </div>
 
+      <div class="tool-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div class="tool-icon blue">🎓</div>
+          <span class="tool-status embebido">● Embebido</span>
+        </div>
+        <div>
+          <div class="tool-name">Capacitación Herramientas 06-2026</div>
+          <div class="tool-desc">Presentación completa de todas las herramientas de gestión comercial del equipo.</div>
+        </div>
+        <div class="tool-footer">
+          <button class="btn-tool primary" onclick="switchTab('tool','cap-herramientas',document.querySelector('[data-tool=cap-herramientas]'))">▶ Ver presentación</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- Tabs con herramientas embebidas -->
@@ -629,6 +656,7 @@
         <div class="tab-btn" data-tool="simulador" onclick="switchTab('tool','simulador',this)">📊 Simulador Comparativas</div>
         <div class="tab-btn" data-tool="manual-leads" onclick="switchTab('tool','manual-leads',this)">📘 Manual de Leads</div>
         <div class="tab-btn" data-tool="calculadora" onclick="switchTab('tool','calculadora',this)">🧮 Calculadora</div>
+        <div class="tab-btn" data-tool="cap-herramientas" onclick="switchTab('tool','cap-herramientas',this)">🎓 Capacitación Herramientas</div>
       </div>
 
       <div class="tab-panel active" id="tool-generador-pdf">
@@ -661,6 +689,14 @@
           <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/1J4qIEl-Q9oZi2PVrFy_fcdorhlmUGkOVT9Xi-tSq6CI/edit?gid=1281104284#gid=1281104284" target="_blank">↗ Abrir en Sheets</a>
         </div>
         <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1J4qIEl-Q9oZi2PVrFy_fcdorhlmUGkOVT9Xi-tSq6CI/edit?gid=1281104284&rm=minimal" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="tool-cap-herramientas">
+        <div class="panel-header">
+          <span class="panel-header-title">🎓 Capacitación Herramientas 06-2026</span>
+          <a class="panel-ext-link" href="https://docs.google.com/presentation/d/12vzkOANoH5iUc7tRJPXK-PGrc_CcD37GcptY-_YYpZk/edit" target="_blank">↗ Abrir en Drive</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/presentation/d/12vzkOANoH5iUc7tRJPXK-PGrc_CcD37GcptY-_YYpZk/embed" loading="lazy"></iframe>
       </div>
 
     </div>
@@ -803,6 +839,49 @@
          style="display:inline-flex;align-items:center;gap:6px;background:var(--mp-blue);color:#fff;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:4px;">
         ⬇ Descargar flyer
       </a>
+    </div>
+  </div>
+
+  <!-- ══════════════ FILES DE CARGAS ══════════════ -->
+  <div id="files" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">📂 Files de cargas de pedidos</div>
+      <div class="page-subtitle">Planillas para gestionar suscripciones, pedidos de Point y de CUIT</div>
+    </div>
+
+    <!-- Tabs con planillas embebidas -->
+    <div class="tab-container">
+      <div class="tab-bar">
+        <div class="tab-btn active" data-tool="suscripcion" onclick="switchTab('file','suscripcion',this)">📋 Plan de Suscripción</div>
+        <div class="tab-btn" data-tool="pedido-point" onclick="switchTab('file','pedido-point',this)">📱 Pedido de Point</div>
+        <div class="tab-btn" data-tool="pedido-cuit" onclick="switchTab('file','pedido-cuit',this)">🏢 Pedido de CUIT</div>
+      </div>
+
+      <div class="tab-panel active" id="file-suscripcion">
+        <div class="panel-header">
+          <span class="panel-header-title">📋 Plan de Suscripción — Calentamiento de Leads</span>
+          <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/14mZes2AvZ2X-3nhTiXvrD8nuih57OhPmDeHhnymcTI4/edit?gid=689426951#gid=689426951" target="_blank">↗ Abrir en Sheets</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/14mZes2AvZ2X-3nhTiXvrD8nuih57OhPmDeHhnymcTI4/edit?gid=689426951&rm=minimal" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="file-pedido-point">
+        <div class="panel-header">
+          <span class="panel-header-title">📱 Pedido de Point Smart a $999</span>
+          <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/1TXPbe_fyH41ELyEJVloksk0hjF9SE0XaOoRAVxET980/edit?gid=588232678#gid=5" target="_blank">↗ Abrir en Sheets</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1TXPbe_fyH41ELyEJVloksk0hjF9SE0XaOoRAVxET980/edit?gid=588232678&rm=minimal" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="file-pedido-cuit">
+        <div class="panel-header">
+          <span class="panel-header-title">🏢 Pedido de CUIT — Principalidad Oportunidades</span>
+          <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/1hG4aHUrZGSYbEctEYwsqDtBhCHCYjSSgfTygAyp8MqY/edit?pli=1&gid=1507430402#gid=1507430402" target="_blank">↗ Abrir en Sheets</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1hG4aHUrZGSYbEctEYwsqDtBhCHCYjSSgfTygAyp8MqY/edit?gid=1507430402&rm=minimal" loading="lazy"></iframe>
+      </div>
+
     </div>
   </div>
 
