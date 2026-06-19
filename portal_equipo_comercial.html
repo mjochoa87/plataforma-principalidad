@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma Interactiva de Principalidad — Mercado Pago</title>
+<style>
+  :root {
+    --mp-blue: #009ee3;
+    --mp-blue-dark: #007ec1;
+    --mp-blue-light: #e8f6fd;
+    --mp-green: #00a650;
+    --mp-green-light: #e6f7ee;
+    --mp-gray-100: #f5f5f5;
+    --mp-gray-200: #ebebeb;
+    --mp-gray-400: #999;
+    --mp-gray-600: #666;
+    --mp-gray-900: #1a1a1a;
+    --sidebar-w: 240px;
+    --header-h: 64px;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--mp-gray-100); color: var(--mp-gray-900); }
+
+  /* HEADER */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: #fff; border-bottom: 1px solid var(--mp-gray-200);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    z-index: 200; box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon { width: 36px; height: 36px; background: var(--mp-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 20px; height: 20px; fill: #fff; }
+  .logo-text { font-size: 17px; font-weight: 700; color: var(--mp-gray-900); }
+  .logo-text span { color: var(--mp-blue); }
+  .header-pill { background: var(--mp-blue-light); color: var(--mp-blue); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; letter-spacing: 0.3px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--mp-blue); color: #fff; font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+
+  /* MAIN */
+  main { margin-top: var(--header-h); padding: 32px; min-height: calc(100vh - var(--header-h)); max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+  /* BACK BUTTON */
+  .btn-back { display: inline-flex; align-items: center; gap: 6px; background: var(--mp-gray-100); border: 1.5px solid var(--mp-gray-200); color: var(--mp-gray-600); border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.15s; }
+  .btn-back:hover { background: var(--mp-blue-light); color: var(--mp-blue); border-color: var(--mp-blue); }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-header { margin-bottom: 24px; }
+  .page-title { font-size: 24px; font-weight: 700; letter-spacing: -0.4px; }
+  .page-subtitle { font-size: 13px; color: var(--mp-gray-400); margin-top: 4px; }
+
+  /* FILTER CHIPS */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .chip { border: 1.5px solid var(--mp-gray-200); background: #fff; color: var(--mp-gray-600); border-radius: 99px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .chip:hover, .chip.active { border-color: var(--mp-blue); color: var(--mp-blue); background: var(--mp-blue-light); }
+
+  /* COURSES GRID */
+  .courses-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .course-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .course-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.13); }
+  .course-thumb { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 38px; }
+  .course-thumb.g1  { background: linear-gradient(135deg,#009ee3,#00c4ff); }
+  .course-thumb.g2  { background: linear-gradient(135deg,#00a650,#38b000); }
+  .course-thumb.g3  { background: linear-gradient(135deg,#7b5ea7,#9b59b6); }
+  .course-thumb.g4  { background: linear-gradient(135deg,#f0a500,#ffc300); }
+  .course-thumb.g5  { background: linear-gradient(135deg,#ff4757,#ff6b81); }
+  .course-thumb.g6  { background: linear-gradient(135deg,#2f3542,#57606f); }
+  .course-thumb.g7  { background: linear-gradient(135deg,#0984e3,#74b9ff); }
+  .course-thumb.g8  { background: linear-gradient(135deg,#00b894,#00cec9); }
+  .course-thumb.g9  { background: linear-gradient(135deg,#6c5ce7,#a29bfe); }
+  .course-thumb.g10 { background: linear-gradient(135deg,#e17055,#fab1a0); }
+  .course-thumb.g11 { background: linear-gradient(135deg,#fd79a8,#e84393); }
+  .course-thumb.g12 { background: linear-gradient(135deg,#00b4d8,#0077b6); }
+  .course-thumb.g13 { background: linear-gradient(135deg,#ff9f43,#ee5a24); }
+  .course-thumb.g14 { background: linear-gradient(135deg,#1e3799,#4a69bd); }
+  .course-thumb.g15 { background: linear-gradient(135deg,#6ab04c,#badc58); }
+  .course-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 99px; margin-bottom: 5px; }
+  .tag-blue   { color: var(--mp-blue); background: var(--mp-blue-light); }
+  .tag-green  { color: var(--mp-green); background: var(--mp-green-light); }
+  .tag-orange { color: #f0a500; background: #fff8e6; }
+  .tag-purple { color: #7b5ea7; background: #f3f0fa; }
+  .tag-gray   { color: #57606f; background: #f1f2f6; }
+  .course-body { padding: 12px 14px 8px; }
+  .course-title { font-size: 13px; font-weight: 700; line-height: 1.35; color: var(--mp-gray-900); }
+  .course-foot { padding: 8px 14px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .course-type { font-size: 11px; color: var(--mp-gray-400); }
+  .btn-ver { background: var(--mp-blue); color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+  .btn-ver:hover { background: var(--mp-blue-dark); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: #fff; border-radius: 16px; width: 93vw; height: 91vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .modal-header { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--mp-gray-200); gap: 10px; flex-shrink: 0; }
+  .modal-title { font-size: 15px; font-weight: 700; flex: 1; }
+  .modal-ext { background: var(--mp-blue-light); color: var(--mp-blue); border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+  .modal-ext:hover { background: var(--mp-blue); color: #fff; }
+  .modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--mp-gray-100); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .modal-close:hover { background: var(--mp-gray-200); }
+  .modal-body { flex: 1; overflow: hidden; position: relative; }
+  .modal-body iframe { width: 100%; height: 100%; border: none; }
+  .modal-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--mp-gray-400); background: #fff; }
+  .spinner { width: 34px; height: 34px; border: 3px solid var(--mp-gray-200); border-top-color: var(--mp-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* FORMS & TOOLS — shared tab pattern */
+  .tab-container { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .tab-bar { display: flex; border-bottom: 2px solid var(--mp-gray-200); padding: 0 8px; background: #fff; }
+  .tab-btn { padding: 13px 22px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--mp-gray-400); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; white-space: nowrap; }
+  .tab-btn:hover { color: var(--mp-blue); }
+  .tab-btn.active { color: var(--mp-blue); border-bottom-color: var(--mp-blue); }
+  .tab-panel { display: none; flex-direction: column; height: calc(100vh - 260px); min-height: 560px; }
+  .tab-panel.active { display: flex; }
+  .panel-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: var(--mp-blue-light); flex-shrink: 0; }
+  .panel-header-title { font-size: 13px; font-weight: 700; color: var(--mp-blue); }
+  .panel-ext-link { font-size: 12px; font-weight: 600; color: var(--mp-blue); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+  .panel-ext-link:hover { text-decoration: underline; }
+  .panel-iframe { flex: 1; border: none; width: 100%; }
+
+  /* TOOLS — grid cards + embedded */
+  .tools-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .tool-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: transform 0.15s; }
+  .tool-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .tool-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .tool-icon.blue   { background: var(--mp-blue-light); }
+  .tool-icon.green  { background: var(--mp-green-light); }
+  .tool-icon.orange { background: #fff8e6; }
+  .tool-icon.purple { background: #f3f0fa; }
+  .tool-name { font-size: 15px; font-weight: 700; color: var(--mp-gray-900); }
+  .tool-desc { font-size: 12px; color: var(--mp-gray-400); line-height: 1.4; }
+  .tool-status { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; display: inline-block; }
+  .tool-status.embebido { background: var(--mp-green-light); color: var(--mp-green); }
+  .tool-status.externo  { background: #fff8e6; color: #f0a500; }
+  .tool-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .btn-tool { border: none; border-radius: 9px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+  .btn-tool.primary { background: var(--mp-blue); color: #fff; }
+  .btn-tool.primary:hover { background: var(--mp-blue-dark); }
+  .btn-tool.secondary { background: var(--mp-blue-light); color: var(--mp-blue); }
+  .btn-tool.secondary:hover { background: var(--mp-blue); color: #fff; }
+
+  /* HOME SCREEN */
+  .home-hero {
+    background: linear-gradient(135deg, #009ee3 0%, #007ec1 60%, #005fa3 100%);
+    border-radius: 20px; padding: 48px 40px; color: #fff; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .home-hero::after {
+    content: '✦'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+    font-size: 120px; opacity: 0.08; pointer-events: none;
+  }
+  .home-hero-greeting { font-size: 13px; font-weight: 600; opacity: 0.8; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .home-hero-title { font-size: 32px; font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 10px; }
+  .home-hero-title span { opacity: 0.75; }
+  .home-hero-sub { font-size: 14px; opacity: 0.8; max-width: 480px; line-height: 1.5; }
+
+  .home-sections { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .home-section-card {
+    background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 28px; cursor: pointer; transition: transform 0.18s, box-shadow 0.18s;
+    display: flex; flex-direction: column; gap: 16px; border: 2px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .home-section-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); border-color: var(--mp-blue); }
+  .home-section-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .home-section-card.s-cap::before  { background: linear-gradient(90deg,#009ee3,#00c4ff); }
+  .home-section-card.s-form::before { background: linear-gradient(90deg,#00a650,#38b000); }
+  .home-section-card.s-tool::before { background: linear-gradient(90deg,#f0a500,#ffc300); }
+  .home-section-card.s-admin::before{ background: linear-gradient(90deg,#7b5ea7,#9b59b6); }
+  .home-section-card.s-vid::before  { background: linear-gradient(90deg,#ff4757,#ff6b81); }
+  .home-section-card.s-qr::before   { background: linear-gradient(90deg,#009ee3,#00c4ff); }
+  .home-section-icon { font-size: 36px; }
+  .home-section-name { font-size: 20px; font-weight: 800; color: var(--mp-gray-900); }
+  .home-section-desc { font-size: 13px; color: var(--mp-gray-400); line-height: 1.5; }
+  .home-section-meta { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .home-section-count { font-size: 11px; font-weight: 700; color: var(--mp-gray-400); }
+  .home-section-cta { background: var(--mp-blue-light); color: var(--mp-blue); border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .home-section-cta:hover { background: var(--mp-blue); color: #fff; }
+
+  /* VIDEOS */
+  .videos-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+  .video-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .video-card video { width: 100%; display: block; background: #000; max-height: 360px; }
+  .video-info { padding: 16px 20px 20px; }
+  .video-title { font-size: 16px; font-weight: 700; color: var(--mp-gray-900); margin-bottom: 4px; }
+  .video-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 99px; color: #ff4757; background: #fff0f2; }
+
+  /* PDF GRID */
+  .pdf-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+  .pdf-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
+  .pdf-card iframe { width: 100%; height: 560px; border: none; display: block; }
+  .pdf-info { padding: 14px 18px 18px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--mp-gray-200); }
+  .pdf-title { font-size: 14px; font-weight: 700; color: var(--mp-gray-900); }
+  .pdf-dl { background: var(--mp-blue-light); color: var(--mp-blue); border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .pdf-dl:hover { background: var(--mp-blue); color: #fff; }
+
+  /* ADMIN GRID */
+  .admin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .admin-card {
+    background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 24px; display: flex; flex-direction: column; gap: 14px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-decoration: none; color: inherit;
+    border-top: 4px solid transparent;
+  }
+  .admin-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+  .admin-card.blue   { border-top-color: var(--mp-blue); }
+  .admin-card.green  { border-top-color: var(--mp-green); }
+  .admin-card.purple { border-top-color: #7b5ea7; }
+  .admin-card.orange { border-top-color: #f0a500; }
+  .admin-card.red    { border-top-color: #ff4757; }
+  .admin-card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .admin-card-icon.blue   { background: var(--mp-blue-light); }
+  .admin-card-icon.green  { background: var(--mp-green-light); }
+  .admin-card-icon.purple { background: #f3f0fa; }
+  .admin-card-icon.orange { background: #fff8e6; }
+  .admin-card-icon.red    { background: #fff0f2; }
+  .admin-card-name { font-size: 16px; font-weight: 700; color: var(--mp-gray-900); }
+  .admin-card-desc { font-size: 12px; color: var(--mp-gray-400); line-height: 1.5; flex: 1; }
+  .admin-card-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--mp-blue); }
+  .admin-card:hover .admin-card-link { text-decoration: underline; }
+
+  @media (max-width: 1100px) {
+    .courses-grid { grid-template-columns: repeat(2,1fr); }
+    .tools-top { grid-template-columns: repeat(2,1fr); }
+    .admin-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- MODAL SLIDES VIEWER -->
+<div class="modal-overlay" id="slideModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span style="font-size:18px">📊</span>
+      <div class="modal-title" id="modalTitle"></div>
+      <a class="modal-ext" id="modalLink" href="#" target="_blank">↗ Abrir en Drive</a>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-loading" id="modalLoading">
+        <div class="spinner"></div>
+        <span style="font-size:13px">Cargando...</span>
+      </div>
+      <iframe id="modalFrame" src="" onload="frameLoaded()" style="display:none"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#" onclick="navTo('inicio');event.preventDefault()">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <span class="logo-text">Plataforma <span>Principalidad</span></span>
+  </a>
+  <span class="header-pill">Equipo Principalidad</span>
+  <div class="header-right">
+    <div class="avatar">MJ</div>
+  </div>
+</header>
+
+
+<!-- MAIN -->
+<main>
+
+  <!-- ══════════════ INICIO ══════════════ -->
+  <div id="inicio" class="page active">
+    <div class="home-hero">
+      <div class="home-hero-greeting">👋 Bienvenida al equipo</div>
+      <div class="home-hero-title">Plataforma Interactiva<br><span>de Principalidad</span></div>
+      <div class="home-hero-sub">Todo lo que necesita tu equipo en un solo lugar: capacitaciones, formularios, herramientas y accesos de administración.</div>
+    </div>
+
+    <div class="home-sections">
+      <div class="home-section-card s-cap" onclick="navTo('capacitaciones')">
+        <div class="home-section-icon">🎓</div>
+        <div>
+          <div class="home-section-name">Capacitaciones</div>
+          <div class="home-section-desc">Materiales de formación del equipo: onboarding, ventas, negociación, herramientas y más.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">15 materiales disponibles</span>
+          <button class="home-section-cta">Ir a capacitaciones →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-form" onclick="navTo('formularios')">
+        <div class="home-section-icon">📋</div>
+        <div>
+          <div class="home-section-name">Formularios</div>
+          <div class="home-section-desc">Completá los formularios de tasas, convertidos y ausencias sin salir de la plataforma.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">4 formularios activos</span>
+          <button class="home-section-cta">Ir a formularios →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-tool" onclick="navTo('herramientas')">
+        <div class="home-section-icon">🛠️</div>
+        <div>
+          <div class="home-section-name">Herramientas</div>
+          <div class="home-section-desc">Generador de PDF, simulador de comparativas, manual de leads y accesos a Grid.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">4 herramientas disponibles</span>
+          <button class="home-section-cta">Ir a herramientas →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-vid" onclick="navTo('videos')">
+        <div class="home-section-icon">🎬</div>
+        <div>
+          <div class="home-section-name">Videos</div>
+          <div class="home-section-desc">Tutoriales en video: configuración de montos mínimos y generador de reportes.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">2 videos disponibles</span>
+          <button class="home-section-cta">Ir a videos →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-admin" onclick="navTo('admin')">
+        <div class="home-section-icon">⚙️</div>
+        <div>
+          <div class="home-section-name">Admin Principales</div>
+          <div class="home-section-desc">Accesos directos a CX One, PTM, MP Users, KYC, Looker de convertidos y comercios.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">7 plataformas de admin</span>
+          <button class="home-section-cta">Ir a admin →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-qr" onclick="navTo('promoqr')">
+        <div class="home-section-icon">📲</div>
+        <div>
+          <div class="home-section-name">Promo QR</div>
+          <div class="home-section-desc">Instructivo para asesores y flyer para el comercio de la promoción QR.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">2 materiales + formulario</span>
+          <button class="home-section-cta">Ir a Promo QR →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ CAPACITACIONES ══════════════ -->
+  <div id="capacitaciones" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">Capacitaciones</div>
+      <div class="page-subtitle">Hacé click en una card para ver la presentación directamente acá</div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="chip active" onclick="filterCap('all',this)">Todas (15)</div>
+      <div class="chip" onclick="filterCap('onboarding',this)">Onboarding</div>
+      <div class="chip" onclick="filterCap('ventas',this)">Ventas</div>
+      <div class="chip" onclick="filterCap('negociacion',this)">Negociación</div>
+      <div class="chip" onclick="filterCap('herramientas',this)">Herramientas</div>
+    </div>
+
+    <div class="courses-grid" id="coursesGrid">
+
+      <div class="course-card" data-cat="onboarding" onclick="openSlide('Onboarding Principalidad','https://docs.google.com/presentation/d/1ad0-NVQJqjtHAB7p6egZqvg7WB1_uh8Vnm7LyVmV3Zc/embed','https://docs.google.com/presentation/d/1ad0-NVQJqjtHAB7p6egZqvg7WB1_uh8Vnm7LyVmV3Zc/edit')">
+        <div class="course-thumb g1">🏦</div>
+        <div class="course-body"><span class="course-tag tag-blue">Onboarding</span><div class="course-title">Onboarding Principalidad</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Capacitación de Créditos','https://docs.google.com/presentation/d/1E0wW0QSoh7HbQyGkiglWloEgjsrlb7HHmQ5iHXGMflw/embed','https://docs.google.com/presentation/d/1E0wW0QSoh7HbQyGkiglWloEgjsrlb7HHmQ5iHXGMflw/edit')">
+        <div class="course-thumb g2">💳</div>
+        <div class="course-body"><span class="course-tag tag-green">Productos</span><div class="course-title">Capacitación de Créditos</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="negociacion" onclick="openSlide('Simulador Negociaciones 1:1','https://docs.google.com/presentation/d/1iQzuWh7-MSt2ysHHpSWFBpX73wUekN20/embed','https://docs.google.com/presentation/d/1iQzuWh7-MSt2ysHHpSWFBpX73wUekN20/edit')">
+        <div class="course-thumb g3">🎯</div>
+        <div class="course-body"><span class="course-tag tag-purple">Negociación</span><div class="course-title">Simulador Negociaciones 1:1</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Manejo de Objeciones','https://docs.google.com/presentation/d/1-u9Q8OmeBNM4s6xsa8IwD2b7guE6z_W0/embed','https://docs.google.com/presentation/d/1-u9Q8OmeBNM4s6xsa8IwD2b7guE6z_W0/edit')">
+        <div class="course-thumb g4">🗣️</div>
+        <div class="course-body"><span class="course-tag tag-orange">Ventas</span><div class="course-title">Manejo de Objeciones</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Capacitación de Impuestos','https://docs.google.com/presentation/d/1fOto30I1DAUunLgCS2S-OvVJL4ijdRdQ/embed','https://docs.google.com/presentation/d/1fOto30I1DAUunLgCS2S-OvVJL4ijdRdQ/edit')">
+        <div class="course-thumb g5">📑</div>
+        <div class="course-body"><span class="course-tag tag-blue">Técnico</span><div class="course-title">Capacitación de Impuestos</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="negociacion" onclick="openSlide('Planificación — Parte 1','https://docs.google.com/presentation/d/1dC1AAxqC4YTJyTaeefn4MseW2rOnLeY4PVy-722QmnI/embed','https://docs.google.com/presentation/d/1dC1AAxqC4YTJyTaeefn4MseW2rOnLeY4PVy-722QmnI/edit')">
+        <div class="course-thumb g6">📅</div>
+        <div class="course-body"><span class="course-tag tag-gray">Planificación</span><div class="course-title">Planificación — Parte 1</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="negociacion" onclick="openSlide('Planificación — Parte 2','https://docs.google.com/presentation/d/1DC4F8Ttw-c2Z7HJsK2Avw0fMXewD1vvkDS9pOO8D5S0/embed','https://docs.google.com/presentation/d/1DC4F8Ttw-c2Z7HJsK2Avw0fMXewD1vvkDS9pOO8D5S0/edit')">
+        <div class="course-thumb g7">🗓️</div>
+        <div class="course-body"><span class="course-tag tag-gray">Planificación</span><div class="course-title">Planificación — Parte 2</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Taller de Abordaje','https://docs.google.com/presentation/d/1fGaXzSmf4y2oZgpq5tVeXpxQQjdWMvk81eQgsi7dt3E/embed','https://docs.google.com/presentation/d/1fGaXzSmf4y2oZgpq5tVeXpxQQjdWMvk81eQgsi7dt3E/edit')">
+        <div class="course-thumb g8">🤝</div>
+        <div class="course-body"><span class="course-tag tag-orange">Ventas</span><div class="course-title">Taller de Abordaje</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="negociacion" onclick="openSlide('Capacitación de Negociaciones','https://docs.google.com/presentation/d/1Piot7A1ojrNQBZGmMWzoeSHjiQIxG37Ets8UHU7MR7I/embed','https://docs.google.com/presentation/d/1Piot7A1ojrNQBZGmMWzoeSHjiQIxG37Ets8UHU7MR7I/edit')">
+        <div class="course-thumb g9">💼</div>
+        <div class="course-body"><span class="course-tag tag-purple">Negociación</span><div class="course-title">Capacitación de Negociaciones</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="negociacion" onclick="openSlide('Cierre Comercial — Farming 1:1','https://docs.google.com/presentation/d/1umy4wXwAngiYlSks3nFNcxItlmmf-XdO7turDmlJtGM/embed','https://docs.google.com/presentation/d/1umy4wXwAngiYlSks3nFNcxItlmmf-XdO7turDmlJtGM/edit')">
+        <div class="course-thumb g10">🏁</div>
+        <div class="course-body"><span class="course-tag tag-purple">Negociación</span><div class="course-title">Cierre Comercial — Farming 1:1</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Objeciones Segmento Chino — MP vs PVS','https://docs.google.com/document/d/1Eb-ADy_ONbnlOR6tdXw-_8fhFsW6iiL_bF2cegVgA0k/preview','https://docs.google.com/document/d/1Eb-ADy_ONbnlOR6tdXw-_8fhFsW6iiL_bF2cegVgA0k/edit')">
+        <div class="course-thumb g11">🗂️</div>
+        <div class="course-body"><span class="course-tag tag-orange">Ventas</span><div class="course-title">Objeciones Segmento Chino — MP vs PVS</div></div>
+        <div class="course-foot"><span class="course-type">📄 Doc</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="herramientas" onclick="openSlide('Herramientas y Accesos MP','https://docs.google.com/presentation/d/1EMYqnXOKJyx_ud3za04rs_aw2kx6b_MK-TKKQ0kpCvE/embed','https://docs.google.com/presentation/d/1EMYqnXOKJyx_ud3za04rs_aw2kx6b_MK-TKKQ0kpCvE/edit')">
+        <div class="course-thumb g12">🛠️</div>
+        <div class="course-body"><span class="course-tag tag-blue">Herramientas</span><div class="course-title">Herramientas y Accesos MP</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Operatoria Naranja X','https://docs.google.com/document/d/1l9rmj4JKwLtpxRb0WJMwnaYblQLhDF9b9dEK7RK59yA/preview','https://docs.google.com/document/d/1l9rmj4JKwLtpxRb0WJMwnaYblQLhDF9b9dEK7RK59yA/edit')">
+        <div class="course-thumb g13">🟠</div>
+        <div class="course-body"><span class="course-tag tag-orange">Ventas</span><div class="course-title">Operatoria Naranja X</div></div>
+        <div class="course-foot"><span class="course-type">📄 Doc</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Taller de Impuestos','https://docs.google.com/presentation/d/16AIN1ELaZ1V4_bICAANr6W4kEDG_9S5XnS6qnMhqFCc/embed','https://docs.google.com/presentation/d/16AIN1ELaZ1V4_bICAANr6W4kEDG_9S5XnS6qnMhqFCc/edit')">
+        <div class="course-thumb g14">📑</div>
+        <div class="course-body"><span class="course-tag tag-blue">Técnico</span><div class="course-title">Taller de Impuestos</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+      <div class="course-card" data-cat="ventas" onclick="openSlide('Buenas Prácticas','https://docs.google.com/presentation/d/1VvfAjwFQeP4TzkZ_Qiituqa2m7ESNcgSs0gSi-uUySM/embed','https://docs.google.com/presentation/d/1VvfAjwFQeP4TzkZ_Qiituqa2m7ESNcgSs0gSi-uUySM/edit')">
+        <div class="course-thumb g15">⭐</div>
+        <div class="course-body"><span class="course-tag tag-green">Ventas</span><div class="course-title">Buenas Prácticas</div></div>
+        <div class="course-foot"><span class="course-type">📊 Slides</span><button class="btn-ver">▶ Ver</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ FORMULARIOS ══════════════ -->
+  <div id="formularios" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">Formularios</div>
+      <div class="page-subtitle">Completá los formularios sin salir del portal</div>
+    </div>
+    <div class="tab-container">
+      <div class="tab-bar">
+        <div class="tab-btn active" onclick="switchTab('form','tasas',this)">📊 Formulario de Tasas</div>
+        <div class="tab-btn" onclick="switchTab('form','convertidos',this)">✅ Formulario de Convertidos</div>
+        <div class="tab-btn" onclick="switchTab('form','ausencias',this)">📆 Ausencias y Licencias</div>
+        <div class="tab-btn" onclick="switchTab('form','promoqr',this)">📲 Promo QR</div>
+      </div>
+
+      <div class="tab-panel active" id="form-tasas">
+        <div class="panel-header">
+          <span class="panel-header-title">📊 Formulario de Tasas</span>
+          <a class="panel-ext-link" href="https://forms.gle/6rdVaik8hMKSknsE8" target="_blank">↗ Abrir en pestaña nueva</a>
+        </div>
+        <iframe class="panel-iframe" src="https://forms.gle/6rdVaik8hMKSknsE8" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="form-convertidos">
+        <div class="panel-header">
+          <span class="panel-header-title">✅ Formulario de Convertidos</span>
+          <a class="panel-ext-link" href="https://docs.google.com/forms/d/e/1FAIpQLSeH7-kpLgr4WWqq4_ih2dlZlBY6dkUZB9OiXTGkBJysJBodFg/viewform" target="_blank">↗ Abrir en pestaña nueva</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSeH7-kpLgr4WWqq4_ih2dlZlBY6dkUZB9OiXTGkBJysJBodFg/viewform?embedded=true" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="form-ausencias">
+        <div class="panel-header">
+          <span class="panel-header-title">📆 Ausencias y Licencias</span>
+          <a class="panel-ext-link" href="https://docs.google.com/forms/d/e/1FAIpQLSc2rCxjbWVcIzgyEVs-A6hBNZ-f--Ng2e4J0rrKUsyQ5pOsKg/viewform" target="_blank">↗ Abrir en pestaña nueva</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSc2rCxjbWVcIzgyEVs-A6hBNZ-f--Ng2e4J0rrKUsyQ5pOsKg/viewform?embedded=true" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="form-promoqr">
+        <div class="panel-header">
+          <span class="panel-header-title">📲 Form Promo QR</span>
+          <a class="panel-ext-link" href="https://docs.google.com/forms/d/10GHP4dOGOGqrg3OGHLfoub2LFjZCAvTw2UT1gvgKFsk/preview" target="_blank">↗ Abrir en pestaña nueva</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/forms/d/10GHP4dOGOGqrg3OGHLfoub2LFjZCAvTw2UT1gvgKFsk/preview" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HERRAMIENTAS ══════════════ -->
+  <div id="herramientas" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">Herramientas</div>
+      <div class="page-subtitle">Todas las herramientas del equipo en un solo lugar</div>
+    </div>
+
+    <!-- Cards resumen -->
+    <div class="tools-top">
+
+      <div class="tool-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div class="tool-icon blue">📄</div>
+          <span class="tool-status embebido">● Embebido</span>
+        </div>
+        <div>
+          <div class="tool-name">Generador de PDF</div>
+          <div class="tool-desc">Generá y descargá propuestas comerciales en PDF desde acá mismo.</div>
+        </div>
+        <div class="tool-footer">
+          <button class="btn-tool primary" onclick="switchTab('tool','generador-pdf',document.querySelector('[data-tool=generador-pdf]'))">▶ Abrir herramienta</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div class="tool-icon green">📊</div>
+          <span class="tool-status embebido">● Embebido</span>
+        </div>
+        <div>
+          <div class="tool-name">Simulador Comparativas SMBs</div>
+          <div class="tool-desc">Compará costos de MP contra la competencia para armar tu propuesta.</div>
+        </div>
+        <div class="tool-footer">
+          <button class="btn-tool primary" onclick="switchTab('tool','simulador',document.querySelector('[data-tool=simulador]'))">▶ Abrir herramienta</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div class="tool-icon orange">🗂️</div>
+          <span class="tool-status externo">↗ Externo</span>
+        </div>
+        <div>
+          <div class="tool-name">Generador de propuestas</div>
+          <div class="tool-desc">Accedé a los archivos y plantillas del equipo en Grid (abre en nueva pestaña).</div>
+        </div>
+        <div class="tool-footer">
+          <a class="btn-tool secondary" href="https://grid.adminml.com/d/01KRPSHRRHCGY6VGAM90TJG887/view" target="_blank">↗ Ir a Grid</a>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div class="tool-icon purple">📘</div>
+          <span class="tool-status embebido">● Embebido</span>
+        </div>
+        <div>
+          <div class="tool-name">Manual de Gestión de Leads</div>
+          <div class="tool-desc">Guía completa para la gestión y seguimiento de leads del equipo comercial.</div>
+        </div>
+        <div class="tool-footer">
+          <button class="btn-tool primary" onclick="switchTab('tool','manual-leads',document.querySelector('[data-tool=manual-leads]'))">▶ Abrir manual</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div class="tool-icon green">🧮</div>
+          <span class="tool-status embebido">● Embebido</span>
+        </div>
+        <div>
+          <div class="tool-name">Calculadora de Rentabilidad</div>
+          <div class="tool-desc">Calculá la rentabilidad de tus comercios directamente desde la plataforma.</div>
+        </div>
+        <div class="tool-footer">
+          <button class="btn-tool primary" onclick="switchTab('tool','calculadora',document.querySelector('[data-tool=calculadora]'))">▶ Abrir calculadora</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabs con herramientas embebidas -->
+    <div class="tab-container">
+      <div class="tab-bar">
+        <div class="tab-btn active" data-tool="generador-pdf" onclick="switchTab('tool','generador-pdf',this)">📄 Generador de PDF</div>
+        <div class="tab-btn" data-tool="simulador" onclick="switchTab('tool','simulador',this)">📊 Simulador Comparativas</div>
+        <div class="tab-btn" data-tool="manual-leads" onclick="switchTab('tool','manual-leads',this)">📘 Manual de Leads</div>
+        <div class="tab-btn" data-tool="calculadora" onclick="switchTab('tool','calculadora',this)">🧮 Calculadora</div>
+      </div>
+
+      <div class="tab-panel active" id="tool-generador-pdf">
+        <div class="panel-header">
+          <span class="panel-header-title">📄 Generador de PDF</span>
+          <a class="panel-ext-link" href="https://script.google.com/a/macros/mercadolibre.com/s/AKfycbxQBHRR1H3W9u6yWM5vIu5EY7emFg2Jh8QaWP83rADGag7aVpGgw-aPplWDjnSkj7uV/exec" target="_blank">↗ Abrir en pestaña nueva</a>
+        </div>
+        <iframe class="panel-iframe" src="https://script.google.com/a/macros/mercadolibre.com/s/AKfycbxQBHRR1H3W9u6yWM5vIu5EY7emFg2Jh8QaWP83rADGag7aVpGgw-aPplWDjnSkj7uV/exec" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="tool-simulador">
+        <div class="panel-header">
+          <span class="panel-header-title">📊 Simulador de Comparativas SMBs</span>
+          <a class="panel-ext-link" href="https://anita081181.github.io/simuladordecomparativasmbs/" target="_blank">↗ Abrir en pestaña nueva</a>
+        </div>
+        <iframe class="panel-iframe" src="https://anita081181.github.io/simuladordecomparativasmbs/" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="tool-manual-leads">
+        <div class="panel-header">
+          <span class="panel-header-title">📘 Manual de Gestión de Leads</span>
+          <a class="panel-ext-link" href="https://docs.google.com/presentation/d/1Va2mkKheuC0BJ_dVWJxZs0lIxnv0dNbGl9fdQrZJKjc/edit" target="_blank">↗ Abrir en Drive</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/presentation/d/1Va2mkKheuC0BJ_dVWJxZs0lIxnv0dNbGl9fdQrZJKjc/embed" loading="lazy"></iframe>
+      </div>
+
+      <div class="tab-panel" id="tool-calculadora">
+        <div class="panel-header">
+          <span class="panel-header-title">🧮 Calculadora de Rentabilidad</span>
+          <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/1J4qIEl-Q9oZi2PVrFy_fcdorhlmUGkOVT9Xi-tSq6CI/edit?gid=1281104284#gid=1281104284" target="_blank">↗ Abrir en Sheets</a>
+        </div>
+        <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1J4qIEl-Q9oZi2PVrFy_fcdorhlmUGkOVT9Xi-tSq6CI/edit?gid=1281104284&rm=minimal" loading="lazy"></iframe>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ VIDEOS ══════════════ -->
+  <div id="videos" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">Videos</div>
+      <div class="page-subtitle">Tutoriales en video para el equipo comercial</div>
+    </div>
+    <div class="videos-grid">
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Configuracion Montos Mnimos.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <span class="video-tag">Tutorial</span>
+          <div class="video-title" style="margin-top:6px">Configuración Montos Mínimos</div>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="Generador de Reportes.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <span class="video-tag">Tutorial</span>
+          <div class="video-title" style="margin-top:6px">Generador de Reportes</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ PROMO QR ══════════════ -->
+  <div id="promoqr" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">📲 Promo QR</div>
+      <div class="page-subtitle">Instructivo para asesores y flyer para el comercio</div>
+    </div>
+    <div class="pdf-grid">
+
+      <div class="pdf-card">
+        <iframe src="Instructivo Promo QR — Para asesores.pdf" loading="lazy"></iframe>
+        <div class="pdf-info">
+          <div class="pdf-title">Instructivo — Para asesores</div>
+          <a class="pdf-dl" href="Instructivo Promo QR — Para asesores.pdf" download>⬇ Descargar</a>
+        </div>
+      </div>
+
+      <div class="pdf-card">
+        <iframe src="Flyer Promo QR — Para tu comercio.pdf" loading="lazy"></iframe>
+        <div class="pdf-info">
+          <div class="pdf-title">Flyer — Para tu comercio</div>
+          <a class="pdf-dl" href="Flyer Promo QR — Para tu comercio.pdf" download>⬇ Descargar</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ ADMIN PRINCIPALES ══════════════ -->
+  <div id="admin" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">Admin Principales</div>
+      <div class="page-subtitle">Accesos directos a las plataformas de administración del equipo</div>
+    </div>
+
+    <div class="admin-grid">
+
+      <a class="admin-card blue" href="https://crm.adminml.com/home" target="_blank">
+        <div class="admin-card-icon blue">🎧</div>
+        <div>
+          <div class="admin-card-name">CX One</div>
+          <div class="admin-card-desc">Plataforma principal de gestión de atención al cliente y operaciones CX.</div>
+        </div>
+        <span class="admin-card-link">↗ Abrir CX One</span>
+      </a>
+
+      <a class="admin-card blue" href="https://cost-admin-modules.adminml.com/cxone" target="_blank">
+        <div class="admin-card-icon blue">🔧</div>
+        <div>
+          <div class="admin-card-name">CX One Module</div>
+          <div class="admin-card-desc">Módulo de administración y configuración avanzada de CX One.</div>
+        </div>
+        <span class="admin-card-link">↗ Abrir módulo</span>
+      </a>
+
+      <a class="admin-card orange" href="https://ptm.adminml.com/devices?limit=10&offset=0&sort%5Bfield%5D=last_connected&sort%5Bdirection%5D=desc" target="_blank">
+        <div class="admin-card-icon orange">📱</div>
+        <div>
+          <div class="admin-card-name">PTM — Terminales</div>
+          <div class="admin-card-desc">Gestión de terminales del usuario: última conexión, estado y dispositivos activos.</div>
+        </div>
+        <span class="admin-card-link">↗ Ver terminales</span>
+      </a>
+
+      <a class="admin-card green" href="https://mpusers.adminml.com/dashboard" target="_blank">
+        <div class="admin-card-icon green">📊</div>
+        <div>
+          <div class="admin-card-name">MP Users Dashboard</div>
+          <div class="admin-card-desc">Panel de control de usuarios de Mercado Pago.</div>
+        </div>
+        <span class="admin-card-link">↗ Abrir dashboard</span>
+      </a>
+
+      <a class="admin-card purple" href="https://useraccounts.adminml.com/home" target="_blank">
+        <div class="admin-card-icon purple">🪪</div>
+        <div>
+          <div class="admin-card-name">Admin User Account</div>
+          <div class="admin-card-desc">Administración de cuentas de usuario y estado KYC de los comercios.</div>
+        </div>
+        <span class="admin-card-link">↗ Abrir admin</span>
+      </a>
+
+      <a class="admin-card red" href="https://datastudio.google.com/reporting/baf1472b-b43f-496c-9bf3-b27b4711eca9/page/p_nrgupzauxd" target="_blank">
+        <div class="admin-card-icon red">📈</div>
+        <div>
+          <div class="admin-card-name">Looker — Convertidos</div>
+          <div class="admin-card-desc">Reporte de convertidos del equipo comercial en Looker Studio.</div>
+        </div>
+        <span class="admin-card-link">↗ Ver reporte</span>
+      </a>
+
+      <a class="admin-card green" href="https://datastudio.google.com/reporting/69ad99c6-8774-465b-9939-4db1c16806fc/page/1xZU" target="_blank">
+        <div class="admin-card-icon green">🏪</div>
+        <div>
+          <div class="admin-card-name">Looker — Comercios</div>
+          <div class="admin-card-desc">Reporte de performance y análisis de comercios en Looker Studio.</div>
+        </div>
+        <span class="admin-card-link">↗ Ver reporte</span>
+      </a>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Navigation
+  function nav(pageId, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    el.classList.add('active');
+  }
+  // Navigate from home cards (finds matching nav-item by onclick attr)
+  function navTo(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    const match = [...document.querySelectorAll('.nav-item')].find(n => n.getAttribute('onclick') && n.getAttribute('onclick').includes(`'${pageId}'`));
+    if (match) match.classList.add('active');
+  }
+
+  // Generic tab switcher — prefix: 'form' or 'tool'
+  function switchTab(prefix, id, el) {
+    const panels = document.querySelectorAll(`[id^="${prefix}-"]`);
+    panels.forEach(p => p.classList.remove('active'));
+    const buttons = document.querySelectorAll(`[data-tool], .tab-bar .tab-btn`);
+    // Only deactivate tabs in the same bar as el
+    if (el && el.closest) {
+      const bar = el.closest('.tab-bar');
+      if (bar) bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    }
+    const panel = document.getElementById(`${prefix}-${id}`);
+    if (panel) panel.classList.add('active');
+    if (el) el.classList.add('active');
+  }
+
+  // Course filter chips
+  document.querySelectorAll('.filter-bar .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-bar .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  function filterCap(cat, el) {
+    document.querySelectorAll('#coursesGrid .course-card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+
+  // Slide modal
+  function openSlide(title, embedUrl, driveUrl) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalLink').href = driveUrl;
+    const frame = document.getElementById('modalFrame');
+    frame.style.display = 'none';
+    document.getElementById('modalLoading').style.display = 'flex';
+    frame.src = embedUrl;
+    document.getElementById('slideModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function frameLoaded() {
+    document.getElementById('modalFrame').style.display = 'block';
+    document.getElementById('modalLoading').style.display = 'none';
+  }
+  function closeModal() {
+    document.getElementById('slideModal').classList.remove('open');
+    document.getElementById('modalFrame').src = '';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('slideModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+  // Flyer lightbox
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); }
+  });
+</script>
+</body>
+</html>
