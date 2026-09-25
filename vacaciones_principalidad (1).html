@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vacaciones · Principalidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f4f0;
+    --card:#ffffff;
+    --accent:#2d5a3d;
+    --accent-dark:#1f4029;
+    --accent-soft:#e6efe8;
+    --text:#232420;
+    --muted:#6b6b62;
+    --border:#e3e1d8;
+    --green:#2d5a3d; --green-bg:#e3efe6;
+    --amber:#93650f; --amber-bg:#fbf0da;
+    --red:#a13a3a; --red-bg:#f8e8e8;
+    --gray:#6b6b62; --gray-bg:#eceae2;
+    --shadow: 0 1px 2px rgba(30,30,20,.04), 0 4px 14px rgba(30,30,20,.05);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .num, .mono{ font-family:'JetBrains Mono', monospace; }
+  h1,h2,h3,h4{ margin:0; font-weight:600; letter-spacing:-0.01em; }
+  p{ margin:0; }
+  button{ font-family:inherit; cursor:pointer; }
+  input, select, textarea{ font-family:inherit; }
+  a{ color:inherit; }
+
+  #app{ min-height:100vh; }
+
+  /* ---------- layout shells ---------- */
+  .centered-shell{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+  }
+  .brandmark{
+    display:flex; align-items:center; gap:10px; margin-bottom:28px;
+  }
+  .brandmark .dot{
+    width:10px; height:10px; border-radius:3px; background:var(--accent);
+  }
+  .brandmark span{ font-size:14px; letter-spacing:.02em; color:var(--muted); }
+
+  .welcome-card{ width:100%; max-width:440px; padding:40px 36px; text-align:center; }
+  .welcome-card h1{ font-size:24px; margin-bottom:8px; }
+  .welcome-card p.sub{ color:var(--muted); font-size:14px; margin-bottom:32px; }
+  .welcome-actions{ display:flex; flex-direction:column; gap:12px; }
+
+  .btn{
+    border-radius:9px; border:1px solid transparent; padding:12px 18px;
+    font-size:14px; font-weight:600; transition:filter .12s ease, transform .05s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-outline{ background:#fff; color:var(--text); border-color:var(--border); }
+  .btn-outline:hover{ background:var(--bg); }
+  .btn-ghost{ background:transparent; color:var(--muted); border-color:transparent; padding:8px 10px; }
+  .btn-ghost:hover{ color:var(--text); }
+  .btn-danger{ background:var(--red-bg); color:var(--red); }
+  .btn-danger:hover{ filter:brightness(0.97); }
+  .btn-sm{ padding:7px 12px; font-size:13px; border-radius:7px; }
+  .btn-icon{ padding:7px 9px; border-radius:7px; background:transparent; border:1px solid var(--border); }
+  .btn-icon:hover{ background:var(--bg); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-block{ width:100%; }
+
+  .field{ text-align:left; margin-bottom:14px; }
+  .field label{ display:block; font-size:12.5px; color:var(--muted); margin-bottom:6px; font-weight:500; }
+  .field input, .field select, .field textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px;
+    font-size:14px; background:#fff; color:var(--text);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--accent);
+  }
+  .field textarea{ resize:vertical; min-height:64px; }
+  .field-row{ display:flex; gap:12px; }
+  .field-row .field{ flex:1; }
+  .error-text{ color:var(--red); font-size:13px; margin-top:8px; }
+  .hint{ color:var(--muted); font-size:12.5px; margin-top:4px; }
+
+  /* ---------- asesor screen ---------- */
+  .asesor-shell{ max-width:640px; margin:0 auto; padding:32px 20px 80px; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .topbar .back{ font-size:13px; color:var(--muted); border:none; background:none; }
+  .topbar .back:hover{ color:var(--text); }
+
+  .balance-card{ padding:24px; margin-bottom:20px; }
+  .balance-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; flex-wrap:wrap; gap:8px;}
+  .balance-head h2{ font-size:19px; }
+  .balance-head .meta{ color:var(--muted); font-size:13px; }
+  .period-block{ border:1px solid var(--border); border-radius:10px; padding:16px; margin-top:12px; }
+  .period-block + .period-block{ margin-top:12px; }
+  .period-title{ font-size:13px; font-weight:600; color:var(--accent-dark); margin-bottom:10px; text-transform:none; }
+  .period-stats{ display:flex; gap:20px; flex-wrap:wrap; }
+  .stat{ min-width:80px; }
+  .stat .n{ font-size:22px; font-weight:600; }
+  .stat .l{ font-size:12px; color:var(--muted); margin-top:2px; }
+  .progress-track{ background:var(--gray-bg); height:8px; border-radius:5px; margin-top:12px; overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--accent); border-radius:5px; }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px;
+    font-size:12px; font-weight:600;
+  }
+  .badge-green{ background:var(--green-bg); color:var(--green); }
+  .badge-amber{ background:var(--amber-bg); color:var(--amber); }
+  .badge-red{ background:var(--red-bg); color:var(--red); }
+  .badge-gray{ background:var(--gray-bg); color:var(--gray); }
+
+  .form-card{ padding:24px; }
+  .form-card h3{ font-size:16px; margin-bottom:16px; }
+
+  .date-block{
+    background:var(--bg); border:1px solid var(--border); border-radius:9px;
+    padding:12px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    font-family:'JetBrains Mono', monospace; font-size:14px; margin:10px 0;
+  }
+  .date-block .lbl{ font-size:10.5px; letter-spacing:.03em; color:var(--muted); display:block; font-weight:600; }
+  .date-block .arrow{ color:var(--muted); }
+
+  /* ---------- admin shell ---------- */
+  .admin-shell{ display:flex; min-height:100vh; }
+  .sidebar{
+    width:216px; flex-shrink:0; background:var(--card); border-right:1px solid var(--border);
+    padding:22px 14px; display:flex; flex-direction:column;
+  }
+  .sidebar .brandmark{ padding:0 8px; }
+  .navlist{ display:flex; flex-direction:column; gap:2px; margin-top:6px; }
+  .navitem{
+    display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px;
+    font-size:13.5px; font-weight:500; color:var(--muted); border:none; background:none; text-align:left;
+    width:100%;
+  }
+  .navitem:hover{ background:var(--bg); color:var(--text); }
+  .navitem.active{ background:var(--accent-soft); color:var(--accent-dark); font-weight:600; }
+  .navitem .dotcount{
+    margin-left:auto; background:var(--red); color:#fff; font-size:10.5px; font-weight:700;
+    border-radius:20px; padding:1px 6px; min-width:16px; text-align:center;
+  }
+  .sidebar-footer{ margin-top:auto; padding-top:14px; border-top:1px solid var(--border); }
+
+  .main-area{ flex:1; padding:28px 34px 60px; max-width:1240px; }
+  .page-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;}
+  .page-head h1{ font-size:21px; }
+  .page-head .sub{ color:var(--muted); font-size:13px; margin-top:3px; }
+
+  .metrics-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:22px; }
+  .metric-card{ padding:16px 18px; }
+  .metric-card .n{ font-size:24px; font-weight:700; }
+  .metric-card .l{ font-size:12.5px; color:var(--muted); margin-top:4px; }
+
+  .toolbar{ display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+  .toolbar input[type=text]{
+    padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13.5px; min-width:220px; background:#fff;
+  }
+  .toolbar select{ padding:9px 10px; border:1px solid var(--border); border-radius:8px; font-size:13.5px; background:#fff; }
+  .toolbar .spacer{ flex:1; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .table-card{ overflow-x:auto; padding:4px; }
+  thead th{
+    text-align:left; padding:10px 14px; color:var(--muted); font-weight:600; font-size:11.5px;
+    letter-spacing:.02em; border-bottom:1px solid var(--border); white-space:nowrap;
+  }
+  tbody td{ padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:#fafaf7; }
+  tr.desvinculado td{ opacity:.55; }
+  tr.desvinculado .nombre{ text-decoration:line-through; }
+  .nombre{ font-weight:600; }
+  .subtext{ color:var(--muted); font-size:12px; margin-top:2px; }
+  .rowactions{ display:flex; gap:6px; }
+
+  .period-mini{ font-size:12px; margin-bottom:4px; }
+  .period-mini .lab{ color:var(--muted); margin-right:5px; }
+  .period-mini .frac{ font-family:'JetBrains Mono', monospace; font-weight:600; }
+
+  .req-dates{
+    display:inline-flex; gap:10px; align-items:center; background:var(--bg); border:1px solid var(--border);
+    border-radius:8px; padding:8px 12px; font-family:'JetBrains Mono', monospace; font-size:13px;
+  }
+  .req-dates .part .lab{ font-size:9.5px; color:var(--muted); letter-spacing:.03em; display:block; font-weight:600; }
+  .req-dates .arrow{ color:var(--muted); }
+
+  .alert-box{
+    display:flex; gap:14px; align-items:flex-start; padding:16px 18px; border-radius:10px;
+    border:1px solid var(--border); margin-bottom:12px;
+  }
+  .alert-box.pend{ background:var(--amber-bg); border-color:#eddba6; }
+  .alert-box.overlap{ background:var(--red-bg); border-color:#eeccca; }
+  .alert-box .icon{ font-size:18px; line-height:1; }
+  .alert-box .body{ flex:1; }
+  .alert-box .title2{ font-weight:600; font-size:14px; margin-bottom:3px; }
+  .alert-box .desc{ font-size:13px; color:var(--muted); }
+  .alert-box .actions{ display:flex; gap:8px; margin-top:10px; }
+
+  .empty-state{ text-align:center; padding:50px 20px; color:var(--muted); }
+  .empty-state .big{ font-size:15px; color:var(--text); font-weight:600; margin-bottom:6px; }
+
+  /* modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(30,30,24,.4); display:flex; align-items:center;
+    justify-content:center; padding:20px; z-index:50;
+  }
+  .modal-card{
+    width:100%; max-width:520px; max-height:90vh; overflow-y:auto; padding:26px 28px;
+  }
+  .modal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+  .modal-head h3{ font-size:17px; }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+  .toggle-pair{ display:flex; gap:8px; }
+  .toggle-pair button{ flex:1; padding:9px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:13px; font-weight:600; color:var(--muted); }
+  .toggle-pair button.on-yes.selected{ background:var(--green-bg); color:var(--green); border-color:#c7e0cf; }
+  .toggle-pair button.on-no.selected{ background:var(--red-bg); color:var(--red); border-color:#eeccca; }
+
+  .feriado-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 4px; border-bottom:1px solid var(--border); font-size:13.5px; }
+  .feriado-row:last-child{ border-bottom:none; }
+  .feriado-row .fd{ font-family:'JetBrains Mono', monospace; font-weight:600; margin-right:10px; }
+
+  .toast{
+    position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--accent-dark); color:#fff;
+    padding:11px 20px; border-radius:9px; font-size:13.5px; box-shadow:var(--shadow); z-index:100;
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
+
+  .connbadge{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted); }
+  .connbadge .led{ width:7px; height:7px; border-radius:50%; background:#9aa; }
+  .connbadge .led.ok{ background:var(--green); }
+  .connbadge .led.bad{ background:var(--red); }
+
+  .tabbtn-mobile{ display:none; }
+
+  @media (max-width: 880px){
+    .admin-shell{ flex-direction:column; }
+    .sidebar{ width:100%; flex-direction:row; align-items:center; padding:12px 14px; overflow-x:auto; border-right:none; border-bottom:1px solid var(--border); }
+    .sidebar .brandmark{ margin-bottom:0; margin-right:8px; }
+    .navlist{ flex-direction:row; margin-top:0; }
+    .navitem{ white-space:nowrap; }
+    .sidebar-footer{ display:none; }
+    .main-area{ padding:20px 16px 50px; }
+    .field-row{ flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getDatabase, ref, set, get, onValue, update, push, child, remove
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* =========================================================
+   FIREBASE INIT
+========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyAmtmuFaKcgzS3JqQ68w9jxbsDtUCRPmho",
+  authDomain: "vacaciones-principalidad.firebaseapp.com",
+  databaseURL: "https://vacaciones-principalidad-default-rtdb.firebaseio.com",
+  projectId: "vacaciones-principalidad",
+  storageBucket: "vacaciones-principalidad.firebasestorage.app",
+  messagingSenderId: "721235726641",
+  appId: "1:721235726641:web:0f10dc05be7c2919316010",
+  measurementId: "G-X3MC1K0YWS"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+
+/* =========================================================
+   CONSTANTES
+========================================================= */
+const TLS = ["Francisco Quintero","Maria Jose Ochoa","Analia Goias","Clara Eppens","Joaquin Balparda","Tomas Herold"];
+
+const SEED_TL = [
+  ["Francisco Quintero","2024-10-01"],
+  ["Maria Jose Ochoa","2024-11-01"],
+  ["Analia Goias","2024-12-01"],
+  ["Clara Eppens","2020-01-01"],
+  ["Joaquin Balparda","2020-01-01"],
+  ["Tomas Herold","2025-02-01"],
+];
+
+const SEED_ASESORES = [
+  ["Carolina Delgado","2026-01-01",10],["Matias Mesiano","2024-11-01",10],["Catalina Fernandez","2025-01-01",10],
+  ["Juan Cruz Rial","2025-01-01",5],["Federico Vitabile","2025-01-01",10],["Emanuel Dursi","2025-01-01",5],
+  ["Soledad Maydana","2025-01-01",5],["Alejandro Diaz","2025-01-01",5],["Manuel Elizarraga","2025-01-01",11],
+  ["Agustin Diz","2025-01-01",0],["Diego Moreno","2025-01-01",5],["Camila Coca","2025-10-01",3],
+  ["Giselda Allende","2026-01-01",0],["Barbara Nuñez","2026-01-01",0],["Mariana Gonzalez","2026-01-01",0],
+  ["Francelys Perez","2026-01-01",0],["Sebastian Jansa","2026-01-01",0],["Diana Fraser","2026-01-01",0],
+  ["Luciana Pisacco","2026-01-01",0],["Niurka Pinzon","2026-01-01",0],["Azul Pacioni","2026-04-01",0],
+  ["Micaela Marsuzi","2026-04-01",0],["Julian Torres","2026-04-01",0],["Joaquin Lescano","2026-04-01",0],
+  ["Rocio Angueira","2026-04-01",0],["Analia Maisonnave","2026-04-01",0],["Daniel Caceres","2026-05-01",0],
+  ["Nicolas Barrios","2026-05-01",0],["Romina Di Paolo","2026-05-01",0],["Santiago Cordoba","2026-05-01",0],
+  ["Mayra Marchese","2026-05-01",0],["Maria Segovia","2026-05-01",0],["Matías Valenzuela","2026-05-01",0],
+  ["Florencia Lamas","2026-05-01",0],["Maximiliano Velazquez","2026-05-01",0],["Juan Capria","2026-05-01",0],
+  ["Agustina Brandoni","2026-06-16",0],["Maria de los Angeles Arinelli","2026-06-16",0],["Sofia Cornu","2026-06-16",0],
+  ["Sol Triberti","2026-06-16",0],["Camila Blanco","2026-06-16",0],["Jesica Gonzalez","2026-06-16",0],
+  ["Marina De Formati","2026-06-16",0],["Carlos Sosa","2026-06-16",0],["Luca Menghini","2026-06-16",0],
+  ["Federico Rodriguez","2026-06-16",0],["Gonzalo Marin","2026-06-16",0],["Rocio Vazquez","2026-06-16",0],
+  ["Fernanda Vecchio","2026-06-16",0],["Franjo Martina","2026-06-16",0],["Stefania Lloret","2026-06-16",0],
+  ["Rodrigo Coronel","2026-06-16",0],["Dorelia Battelini","2026-06-16",0],["Franco Mantilla","2026-06-16",0],
+  ["Ayelen Rolaoser Melon","2026-06-16",0],["Nayra Luna","2026-06-16",0],["Cristina Hsieh","2026-04-01",0],
+  ["Sofia Zhuang","2026-04-01",0],
+];
+
+const SEED_FERIADOS = {
+  "2025-01-01":"Año Nuevo","2025-03-03":"Carnaval","2025-03-04":"Carnaval",
+  "2025-03-24":"Día Nacional de la Memoria por la Verdad y la Justicia",
+  "2025-04-02":"Día del Veterano y de los Caídos en la Guerra de Malvinas",
+  "2025-04-18":"Viernes Santo","2025-05-01":"Día del Trabajador","2025-05-25":"Día de la Revolución de Mayo",
+  "2025-06-20":"Paso a la Inmortalidad del Gral. Belgrano","2025-07-09":"Día de la Independencia",
+  "2025-08-17":"Paso a la Inmortalidad del Gral. San Martín",
+  "2025-10-12":"Día del Respeto a la Diversidad Cultural","2025-11-24":"Día de la Soberanía Nacional",
+  "2025-12-08":"Inmaculada Concepción de María","2025-12-25":"Navidad",
+  "2026-01-01":"Año Nuevo","2026-02-16":"Carnaval","2026-02-17":"Carnaval",
+  "2026-03-24":"Día Nacional de la Memoria por la Verdad y la Justicia",
+  "2026-04-02":"Día del Veterano y de los Caídos en la Guerra de Malvinas",
+  "2026-04-03":"Viernes Santo","2026-05-01":"Día del Trabajador","2026-05-25":"Día de la Revolución de Mayo",
+  "2026-06-20":"Paso a la Inmortalidad del Gral. Belgrano","2026-07-09":"Día de la Independencia",
+  "2026-08-17":"Paso a la Inmortalidad del Gral. San Martín",
+  "2026-10-12":"Día del Respeto a la Diversidad Cultural","2026-11-20":"Día de la Soberanía Nacional",
+  "2026-12-08":"Inmaculada Concepción de María","2026-12-25":"Navidad",
+};
+
+const CLAVE_DEFAULT = "Principalidad2026";
+
+const PERIODOS = [
+  { id:"2025-2026", label:"2025/2026", inicio:"2025-10-01", fin:"2026-09-30" },
+  { id:"2026-2027", label:"2026/2027", inicio:"2026-10-01", fin:"2027-09-30" },
+];
+
+/* =========================================================
+   UTILIDADES DE FECHA
+========================================================= */
+function pad2(n){ return String(n).padStart(2,"0"); }
+function parseYMD(str){
+  const [y,m,d] = str.split("-").map(Number);
+  return new Date(y, m-1, d);
+}
+function formatYMD(date){
+  return `${date.getFullYear()}-${pad2(date.getMonth()+1)}-${pad2(date.getDate())}`;
+}
+function today(){
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+function addDays(date,n){
+  const d = new Date(date); d.setDate(d.getDate()+n); return d;
+}
+function monthsBetween(a,b){
+  let months = (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth());
+  if (b.getDate() < a.getDate()) months--;
+  return Math.max(0, months);
+}
+function isBusinessDay(date, feriadosSet){
+  const dow = date.getDay();
+  if (dow === 0 || dow === 6) return false;
+  if (feriadosSet.has(formatYMD(date))) return false;
+  return true;
+}
+function businessDaysBetween(startStr, endStr, feriadosSet){
+  if (!startStr || !endStr) return 0;
+  let start = parseYMD(startStr), end = parseYMD(endStr);
+  if (end < start) return 0;
+  let count = 0, cur = new Date(start);
+  while (cur <= end){
+    if (isBusinessDay(cur, feriadosSet)) count++;
+    cur = addDays(cur,1);
+  }
+  return count;
+}
+function fmtDisplay(str){
+  if (!str) return "—";
+  return str;
+}
+
+/* =========================================================
+   REGLAS DE NEGOCIO
+========================================================= */
+function escalaDias(ingresoStr, hastaDate){
+  const ingreso = parseYMD(ingresoStr);
+  const meses = monthsBetween(ingreso, hastaDate);
+  if (meses < 6) return meses;
+  const anios = meses/12;
+  if (anios < 5) return 10;
+  if (anios < 10) return 15;
+  return 20;
+}
+function antiguedadTexto(ingresoStr){
+  const ingreso = parseYMD(ingresoStr);
+  const meses = monthsBetween(ingreso, today());
+  const anios = Math.floor(meses/12);
+  const mesesResto = meses%12;
+  if (meses < 1) return "menos de 1 mes";
+  if (anios === 0) return `${meses} mes${meses===1?"":"es"}`;
+  return mesesResto===0 ? `${anios} año${anios===1?"":"s"}` : `${anios}a ${mesesResto}m`;
+}
+/** Calcula correspondientes/tomados/pendientes por cada período aplicable a una persona */
+function desglosePorPeriodo(persona, solicitudesAprobadasPersona){
+  const hoy = today();
+  const out = [];
+  for (const per of PERIODOS){
+    const perInicio = parseYMD(per.inicio), perFin = parseYMD(per.fin);
+    if (hoy < perInicio) continue; // el período todavía no arrancó
+    const ingreso = parseYMD(persona.ingreso);
+    if (ingreso > perFin) continue; // todavía no había ingresado
+
+    const finCalculo = hoy < perFin ? hoy : perFin;
+    let correspondientes;
+    if (ingreso <= perInicio){
+      correspondientes = persona.objetivo != null ? persona.objetivo : escalaDias(persona.ingreso, finCalculo);
+    } else {
+      const escalaAnual = persona.objetivo != null ? persona.objetivo : escalaDias(persona.ingreso, finCalculo);
+      const mesesEnPeriodo = monthsBetween(ingreso, finCalculo);
+      correspondientes = Math.round((escalaAnual/12) * mesesEnPeriodo * 100) / 100;
+    }
+    correspondientes = Math.max(0, Math.round(correspondientes));
+
+    // días tomados dentro de este período: solicitudes aprobadas cuyo inicio cae en el período,
+    // más (solo para el período vigente más antiguo con datos) el arrastre histórico cargado en el alta.
+    let tomadosSolicitudes = 0;
+    for (const s of solicitudesAprobadasPersona){
+      const sIni = parseYMD(s.inicio);
+      if (sIni >= perInicio && sIni <= perFin) tomadosSolicitudes += (s.diasHab || 0);
+    }
+    let tomados = tomadosSolicitudes;
+    if (per.id === PERIODOS[0].id){
+      tomados += (persona.tomados || 0); // arrastre histórico cargado manualmente en el alta
+    }
+    const pendientes = Math.max(0, correspondientes - tomados);
+    out.push({ periodo: per.label, correspondientes, tomados, pendientes });
+  }
+  return out;
+}
+
+/* =========================================================
+   ESTADO LOCAL (se llena vía onValue)
+========================================================= */
+let personas = {};      // id -> persona
+let solicitudes = {};   // id -> solicitud
+let feriados = {};      // 'YYYY-MM-DD' -> descripcion
+let config = { clave: CLAVE_DEFAULT, mails: {} };
+let dataReady = { personas:false, solicitudes:false, feriados:false, config:false };
+let conectado = false;
+
+let state = {
+  screen: "welcome",          // welcome | asesor | admin-login | admin
+  asesorSeleccionado: null,   // id de persona
+  adminTab: "dashboard",
+  adminLoginError: "",
+  modal: null,                // {type:'editar', id} | {type:'nueva-solicitud'} | {type:'nueva-persona'}
+  filtros: {
+    dash: { q:"", rol:"todos", pend:"todos" },
+    pedidos: { q:"", estado:"pendiente", rol:"todos" },
+    historial: { q:"" },
+  }
+};
+
+function slugify(str){
+  return str.toString().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+}
+
+/* =========================================================
+   SEED (solo si la base está vacía)
+========================================================= */
+async function seedIfEmpty(){
+  const snap = await get(ref(db, "personas"));
+  if (snap.exists()) return;
+
+  const personasSeed = {};
+  for (const [nombre, ingreso] of SEED_TL){
+    const id = slugify(nombre);
+    personasSeed[id] = { nombre, rol:"TL", ingreso, tomados:0, objetivo:null, diasHabMes:null, activo:true, fechaDesvinculacion:null };
+  }
+  for (const [nombre, ingreso, tomados] of SEED_ASESORES){
+    const id = slugify(nombre);
+    personasSeed[id] = { nombre, rol:"Asesor", ingreso, tomados, objetivo:null, diasHabMes:null, activo:true, fechaDesvinculacion:null };
+  }
+  const mailsSeed = {};
+  TLS.forEach(tl => { mailsSeed[slugify(tl)] = ""; });
+
+  await set(ref(db), {
+    personas: personasSeed,
+    solicitudes: {},
+    feriados: SEED_FERIADOS,
+    config: { clave: CLAVE_DEFAULT, mails: mailsSeed }
+  });
+}
+
+/* =========================================================
+   LISTENERS FIREBASE
+========================================================= */
+function iniciarListeners(){
+  onValue(ref(db,"personas"), snap => {
+    personas = snap.val() || {};
+    dataReady.personas = true; conectado = true;
+    render();
+  }, () => { conectado = false; render(); });
+
+  onValue(ref(db,"solicitudes"), snap => {
+    solicitudes = snap.val() || {};
+    dataReady.solicitudes = true;
+    render();
+  });
+
+  onValue(ref(db,"feriados"), snap => {
+    feriados = snap.val() || {};
+    dataReady.feriados = true;
+    render();
+  });
+
+  onValue(ref(db,"config"), snap => {
+    const v = snap.val();
+    config = v || { clave: CLAVE_DEFAULT, mails:{} };
+    if (!config.mails) config.mails = {};
+    dataReady.config = true;
+    render();
+  });
+}
+
+function feriadosSet(){ return new Set(Object.keys(feriados || {})); }
+
+function isDataReady(){
+  return dataReady.personas && dataReady.solicitudes && dataReady.feriados && dataReady.config;
+}
+
+/* =========================================================
+   ESCRITURAS
+========================================================= */
+async function guardarPersona(id, data){
+  await update(ref(db, `personas/${id}`), data);
+}
+async function crearPersona(data){
+  const id = slugify(data.nombre) + "-" + Math.random().toString(36).slice(2,6);
+  await set(ref(db, `personas/${id}`), {
+    nombre:data.nombre, rol:data.rol, ingreso:data.ingreso, tomados:Number(data.tomados)||0,
+    objetivo: data.objetivo!=="" && data.objetivo!=null ? Number(data.objetivo) : null,
+    diasHabMes:null, activo:true, fechaDesvinculacion:null
+  });
+}
+async function desvincularPersona(id){
+  await update(ref(db, `personas/${id}`), { activo:false, fechaDesvinculacion: formatYMD(today()) });
+}
+async function reactivarPersona(id){
+  await update(ref(db, `personas/${id}`), { activo:true, fechaDesvinculacion:null });
+}
+async function crearSolicitud(data){
+  const newRef = push(ref(db,"solicitudes"));
+  await set(newRef, {
+    personaId: data.personaId, inicio:data.inicio, fin:data.fin,
+    diasHab: businessDaysBetween(data.inicio, data.fin, feriadosSet()),
+    estado: data.estado || "pendiente",
+    aprobacion: data.aprobacion || "Pendiente",
+    aviso: data.aviso || "No",
+    tl: data.tl || "",
+    obs: data.obs || "",
+    fecha: new Date().toISOString(),
+    origen: data.origen || "admin",
+  });
+  return newRef.key;
+}
+async function actualizarEstadoSolicitud(id, estado){
+  await update(ref(db, `solicitudes/${id}`), { estado, aprobacion: estado==="aprobada"?"Sí":(estado==="rechazada"?"No":"Pendiente") });
+}
+async function guardarClave(nuevaClave){
+  await update(ref(db,"config"), { clave: nuevaClave });
+}
+async function guardarMailTL(tlId, mail){
+  await update(ref(db, `config/mails`), { [tlId]: mail });
+}
+async function agregarFeriado(fecha, desc){
+  await update(ref(db,"feriados"), { [fecha]: desc });
+}
+async function quitarFeriado(fecha){
+  await remove(ref(db, `feriados/${fecha}`));
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+let toastTimer = null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove("show"), 2600);
+}
+
+/* =========================================================
+   HELPERS DE DATOS DERIVADOS
+========================================================= */
+function personasActivas(incluirInactivos=false){
+  return Object.entries(personas)
+    .filter(([id,p]) => incluirInactivos ? true : p.activo!==false)
+    .map(([id,p]) => ({id, ...p}));
+}
+function solicitudesArray(){
+  return Object.entries(solicitudes).map(([id,s]) => ({id, ...s}));
+}
+function solicitudesAprobadasDe(personaId){
+  return solicitudesArray().filter(s => s.personaId===personaId && s.estado==="aprobada");
+}
+function nombrePersona(id){
+  return personas[id] ? personas[id].nombre : "(persona eliminada)";
+}
+function estadoBadge(estado){
+  if (estado==="aprobada") return `<span class="badge badge-green">Aprobada</span>`;
+  if (estado==="rechazada") return `<span class="badge badge-red">Rechazada</span>`;
+  return `<span class="badge badge-amber">Pendiente</span>`;
+}
+
+/* =========================================================
+   RENDER PRINCIPAL
+========================================================= */
+function render(){
+  const app = document.getElementById("app");
+  if (!isDataReady()){
+    app.innerHTML = `<div class="centered-shell"><p style="color:var(--muted); font-size:14px;">Conectando con la base de datos…</p></div>`;
+    return;
+  }
+  if (state.screen === "welcome") app.innerHTML = renderWelcome();
+  else if (state.screen === "asesor") app.innerHTML = renderAsesor();
+  else if (state.screen === "admin-login") app.innerHTML = renderAdminLogin();
+  else if (state.screen === "admin") app.innerHTML = renderAdmin();
+
+  const modalHost = document.createElement("div");
+  if (state.modal){
+    modalHost.innerHTML = renderModal();
+    app.appendChild(modalHost.firstElementChild);
+  }
+}
+
+/* ---------- WELCOME ---------- */
+function renderWelcome(){
+  return `
+    <div class="centered-shell">
+      <div class="card welcome-card">
+        <div class="brandmark" style="justify-content:center;">
+          <div class="dot"></div><span>PRINCIPALIDAD</span>
+        </div>
+        <h1>Gestión de vacaciones</h1>
+        <p class="sub">Elegí cómo querés ingresar</p>
+        <div class="welcome-actions">
+          <button class="btn btn-primary btn-block" onclick="App.ir('asesor')">Soy asesor</button>
+          <button class="btn btn-outline btn-block" onclick="App.ir('admin-login')">Acceso administrador</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ---------- ASESOR ---------- */
+function renderAsesor(){
+  const activos = personasActivas().sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  const sel = state.asesorSeleccionado;
+  const persona = sel ? personas[sel] : null;
+
+  let balanceHtml = "";
+  if (persona){
+    const aprobadas = solicitudesAprobadasDe(sel);
+    const desglose = desglosePorPeriodo({id:sel, ...persona}, aprobadas);
+    balanceHtml = `
+      <div class="card balance-card">
+        <div class="balance-head">
+          <div>
+            <h2>${persona.nombre}</h2>
+            <p class="meta">Ingreso ${persona.ingreso} · Antigüedad ${antiguedadTexto(persona.ingreso)}</p>
+          </div>
+        </div>
+        ${desglose.map(d => `
+          <div class="period-block">
+            <div class="period-title">Período ${d.periodo}</div>
+            <div class="period-stats">
+              <div class="stat"><div class="n num">${d.correspondientes}</div><div class="l">Corresponden</div></div>
+              <div class="stat"><div class="n num">${d.tomados}</div><div class="l">Tomados</div></div>
+              <div class="stat"><div class="n num">${d.pendientes}</div><div class="l">Pendientes</div></div>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${d.correspondientes? Math.min(100, d.tomados/d.correspondientes*100):0}%"></div></div>
+          </div>
+        `).join("") || `<p class="hint">Todavía no hay un período de vacaciones vigente para tu fecha de ingreso.</p>`}
+      </div>`;
+  }
+
+  const misSolicitudes = sel ? solicitudesArray().filter(s=>s.personaId===sel).sort((a,b)=> new Date(b.fecha)-new Date(a.fecha)) : [];
+
+  return `
+    <div class="asesor-shell">
+      <div class="topbar">
+        <button class="back" onclick="App.ir('welcome')">← Volver</button>
+        <span class="connbadge"><span class="led ${conectado?'ok':'bad'}"></span>${conectado?'Sincronizado':'Sin conexión'}</span>
+      </div>
+      <h1 style="margin-bottom:16px;">Portal del asesor</h1>
+
+      <div class="card" style="padding:20px 22px; margin-bottom:20px;">
+        <div class="field" style="margin-bottom:0;">
+          <label>Tu nombre</label>
+          <select onchange="App.seleccionarAsesor(this.value)">
+            <option value="">Seleccioná tu nombre…</option>
+            ${activos.map(p => `<option value="${p.id}" ${p.id===sel?"selected":""}>${p.nombre}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+
+      ${persona ? `
+        ${balanceHtml}
+
+        <div class="card form-card" style="margin-bottom:20px;">
+          <h3>Solicitar vacaciones</h3>
+          <form onsubmit="App.enviarSolicitudAsesor(event)">
+            <div class="field-row">
+              <div class="field"><label>Fecha inicio</label><input required type="date" name="inicio"></div>
+              <div class="field"><label>Fecha fin</label><input required type="date" name="fin"></div>
+            </div>
+            <div class="field">
+              <label>Dirigido a (Team Leader)</label>
+              <select required name="tl">
+                <option value="">Seleccioná un TL…</option>
+                ${TLS.map(tl=>`<option value="${tl}">${tl}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label>Observaciones (opcional)</label>
+              <textarea name="obs" placeholder="Algo que quieras aclarar sobre el pedido…"></textarea>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Enviar solicitud</button>
+          </form>
+        </div>
+
+        <div class="card" style="padding:20px 22px;">
+          <h3 style="margin-bottom:12px; font-size:15px;">Mis solicitudes</h3>
+          ${misSolicitudes.length===0 ? `<p class="hint">Todavía no enviaste ninguna solicitud.</p>` : misSolicitudes.map(s=>`
+            <div style="padding:12px 0; border-bottom:1px solid var(--border);">
+              <div class="req-dates" style="margin:0 0 8px;">
+                <div class="part"><span class="lab">DESDE</span>${s.inicio}</div>
+                <span class="arrow">→</span>
+                <div class="part"><span class="lab">HASTA</span>${s.fin}</div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="subtext">${s.diasHab} días hábiles · a ${s.tl||"—"}</span>
+                ${estadoBadge(s.estado)}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      ` : `<p class="hint">Elegí tu nombre para ver tu saldo y pedir vacaciones.</p>`}
+    </div>`;
+}
+
+/* ---------- ADMIN LOGIN ---------- */
+function renderAdminLogin(){
+  return `
+    <div class="centered-shell">
+      <div class="card welcome-card">
+        <div class="brandmark" style="justify-content:center;"><div class="dot"></div><span>PRINCIPALIDAD</span></div>
+        <h1>Acceso administrador</h1>
+        <p class="sub">Ingresá la clave maestra</p>
+        <form onsubmit="App.intentarLoginAdmin(event)">
+          <div class="field" style="text-align:left;">
+            <label>Clave</label>
+            <input type="password" name="clave" autofocus required>
+          </div>
+          ${state.adminLoginError ? `<p class="error-text">${state.adminLoginError}</p>` : ""}
+          <button class="btn btn-primary btn-block" type="submit" style="margin-top:6px;">Ingresar</button>
+        </form>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="App.ir('welcome')">← Volver</button>
+      </div>
+    </div>`;
+}
+
+/* ---------- ADMIN SHELL ---------- */
+function renderAdmin(){
+  const pendCount = solicitudesArray().filter(s=>s.estado==="pendiente").length;
+  const tabs = [
+    ["dashboard","Dashboard"],
+    ["pedidos","Pedidos"],
+    ["historial","Historial"],
+    ["alertas","Alertas"],
+    ["feriados","Feriados"],
+    ["config","Config"],
+  ];
+  return `
+    <div class="admin-shell">
+      <div class="sidebar">
+        <div class="brandmark"><div class="dot"></div><span>PRINCIPALIDAD</span></div>
+        <div class="navlist">
+          ${tabs.map(([k,label])=>`
+            <button class="navitem ${state.adminTab===k?'active':''}" onclick="App.setAdminTab('${k}')">
+              ${label}
+              ${k==='alertas' && pendCount>0 ? `<span class="dotcount">${pendCount}</span>`:""}
+              ${k==='pedidos' && pendCount>0 ? `<span class="dotcount">${pendCount}</span>`:""}
+            </button>`).join("")}
+        </div>
+        <div class="sidebar-footer">
+          <span class="connbadge" style="margin-bottom:10px;"><span class="led ${conectado?'ok':'bad'}"></span>${conectado?'Sincronizado':'Sin conexión'}</span>
+          <button class="btn btn-outline btn-block btn-sm" onclick="App.ir('welcome')">Salir</button>
+        </div>
+      </div>
+      <div class="main-area">
+        ${state.adminTab==="dashboard" ? renderTabDashboard() : ""}
+        ${state.adminTab==="pedidos" ? renderTabPedidos() : ""}
+        ${state.adminTab==="historial" ? renderTabHistorial() : ""}
+        ${state.adminTab==="alertas" ? renderTabAlertas() : ""}
+        ${state.adminTab==="feriados" ? renderTabFeriados() : ""}
+        ${state.adminTab==="config" ? renderTabConfig() : ""}
+      </div>
+    </div>`;
+}
+
+/* ---------- TAB: DASHBOARD ---------- */
+function renderTabDashboard(){
+  const f = state.filtros.dash;
+  let lista = personasActivas(true);
+
+  const activasCount = lista.filter(p=>p.activo!==false).length;
+  let pendPorPeriodo = {}; PERIODOS.forEach(p=>pendPorPeriodo[p.id]=0);
+  let completados = 0;
+  lista.filter(p=>p.activo!==false).forEach(p=>{
+    const desg = desglosePorPeriodo(p, solicitudesAprobadasDe(p.id));
+    let totalPend = 0;
+    desg.forEach((d,idx)=>{ if(d.pendientes>0) pendPorPeriodo[PERIODOS[idx].id]++; totalPend+=d.pendientes; });
+    if (desg.length>0 && totalPend===0) completados++;
+  });
+
+  if (f.q) lista = lista.filter(p=>p.nombre.toLowerCase().includes(f.q.toLowerCase()));
+  if (f.rol!=="todos") lista = lista.filter(p=>p.rol===f.rol);
+  if (f.pend==="activos") lista = lista.filter(p=>p.activo!==false);
+  if (f.pend==="desvinculados") lista = lista.filter(p=>p.activo===false);
+  if (f.pend==="conpendientes"){
+    lista = lista.filter(p=>{
+      const desg = desglosePorPeriodo(p, solicitudesAprobadasDe(p.id));
+      return desg.some(d=>d.pendientes>0);
+    });
+  } else if (f.pend!=="todos" && f.pend!=="desvinculados"){
+    lista = lista.filter(p=>p.activo!==false);
+  }
+  lista.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+
+  return `
+    <div class="page-head">
+      <div><h1>Dashboard</h1><p class="sub">Estado general del equipo</p></div>
+    </div>
+    <div class="metrics-row">
+      <div class="card metric-card"><div class="n">${activasCount}</div><div class="l">Personas activas</div></div>
+      <div class="card metric-card"><div class="n">${pendPorPeriodo[PERIODOS[0].id]}</div><div class="l">Con pendientes · ${PERIODOS[0].label}</div></div>
+      <div class="card metric-card"><div class="n">${pendPorPeriodo[PERIODOS[1].id]}</div><div class="l">Con pendientes · ${PERIODOS[1].label}</div></div>
+      <div class="card metric-card"><div class="n">${completados}</div><div class="l">Completados</div></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" placeholder="Buscar por nombre…" value="${f.q}" oninput="App.filtrar('dash','q',this.value)">
+      <select onchange="App.filtrar('dash','rol',this.value)">
+        <option value="todos" ${f.rol==='todos'?'selected':''}>Todos los roles</option>
+        <option value="TL" ${f.rol==='TL'?'selected':''}>Team Leaders</option>
+        <option value="Asesor" ${f.rol==='Asesor'?'selected':''}>Asesores</option>
+      </select>
+      <select onchange="App.filtrar('dash','pend',this.value)">
+        <option value="activos" ${f.pend==='activos'?'selected':''}>Activos</option>
+        <option value="conpendientes" ${f.pend==='conpendientes'?'selected':''}>Con pendientes</option>
+        <option value="desvinculados" ${f.pend==='desvinculados'?'selected':''}>Desvinculados</option>
+        <option value="todos" ${f.pend==='todos'?'selected':''}>Todos</option>
+      </select>
+      <div class="spacer"></div>
+      <button class="btn btn-primary btn-sm" onclick="App.abrirModal('nueva-persona')">+ Agregar persona</button>
+    </div>
+
+    <div class="card table-card">
+      <table>
+        <thead><tr>
+          <th>Nombre</th><th>Rol</th><th>Ingreso</th><th>Antigüedad</th><th>Períodos</th><th>Estado</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${lista.length===0 ? `<tr><td colspan="7"><div class="empty-state">Sin resultados para este filtro.</div></td></tr>` :
+          lista.map(p=>{
+            const desg = desglosePorPeriodo(p, solicitudesAprobadasDe(p.id));
+            return `
+            <tr class="${p.activo===false?'desvinculado':''}">
+              <td><div class="nombre">${p.nombre}</div>${p.activo===false?`<div class="subtext">Desvinculado ${p.fechaDesvinculacion||''}</div>`:''}</td>
+              <td><span class="badge badge-gray">${p.rol}</span></td>
+              <td class="num">${p.ingreso}</td>
+              <td>${antiguedadTexto(p.ingreso)}</td>
+              <td>
+                ${desg.length===0? `<span class="subtext">Sin período vigente</span>` : desg.map(d=>`
+                  <div class="period-mini"><span class="lab">${d.periodo}</span><span class="frac">${d.tomados}/${d.correspondientes}</span></div>
+                `).join("")}
+              </td>
+              <td>${p.activo===false?`<span class="badge badge-red">Desvinculado</span>`:`<span class="badge badge-green">Activo</span>`}</td>
+              <td>
+                <div class="rowactions">
+                  <button class="btn-icon" title="Editar" onclick="App.abrirModal('editar','${p.id}')">✏️</button>
+                  ${p.activo===false
+                    ? `<button class="btn-icon" title="Reactivar" onclick="App.reactivar('${p.id}')">↺</button>`
+                    : `<button class="btn-icon" title="Desvincular" onclick="App.confirmarDesvinculo('${p.id}')">⨯</button>`}
+                </div>
+              </td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+/* ---------- TAB: PEDIDOS ---------- */
+function renderTabPedidos(){
+  const f = state.filtros.pedidos;
+  let lista = solicitudesArray();
+  if (f.estado!=="todos") lista = lista.filter(s=>s.estado===f.estado);
+  if (f.rol!=="todos") lista = lista.filter(s=> personas[s.personaId] && personas[s.personaId].rol===f.rol);
+  if (f.q) lista = lista.filter(s=> nombrePersona(s.personaId).toLowerCase().includes(f.q.toLowerCase()));
+  lista.sort((a,b)=> new Date(b.fecha)-new Date(a.fecha));
+
+  return `
+    <div class="page-head">
+      <div><h1>Pedidos</h1><p class="sub">Solicitudes propias y de los asesores</p></div>
+      <button class="btn btn-primary" onclick="App.abrirModal('nueva-solicitud')">+ Nueva solicitud</button>
+    </div>
+    <div class="toolbar">
+      <input type="text" placeholder="Buscar por nombre…" value="${f.q}" oninput="App.filtrar('pedidos','q',this.value)">
+      <select onchange="App.filtrar('pedidos','estado',this.value)">
+        <option value="pendiente" ${f.estado==='pendiente'?'selected':''}>Pendientes</option>
+        <option value="aprobada" ${f.estado==='aprobada'?'selected':''}>Aprobadas</option>
+        <option value="rechazada" ${f.estado==='rechazada'?'selected':''}>Rechazadas</option>
+        <option value="todos" ${f.estado==='todos'?'selected':''}>Todos los estados</option>
+      </select>
+      <select onchange="App.filtrar('pedidos','rol',this.value)">
+        <option value="todos" ${f.rol==='todos'?'selected':''}>Todos los roles</option>
+        <option value="TL" ${f.rol==='TL'?'selected':''}>Team Leaders</option>
+        <option value="Asesor" ${f.rol==='Asesor'?'selected':''}>Asesores</option>
+      </select>
+    </div>
+    <div class="card table-card">
+      <table>
+        <thead><tr><th>Persona</th><th>Fechas</th><th>Días</th><th>TL</th><th>Aviso agencia</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+          ${lista.length===0? `<tr><td colspan="7"><div class="empty-state"><div class="big">No hay solicitudes acá</div>Probá otro filtro o cargá una nueva.</div></td></tr>` :
+          lista.map(s=>`
+            <tr>
+              <td><div class="nombre">${nombrePersona(s.personaId)}</div>${s.obs?`<div class="subtext">${s.obs}</div>`:''}</td>
+              <td><div class="req-dates"><div class="part"><span class="lab">DESDE</span>${s.inicio}</div><span class="arrow">→</span><div class="part"><span class="lab">HASTA</span>${s.fin}</div></div></td>
+              <td class="num">${s.diasHab}</td>
+              <td>${s.tl||"—"}</td>
+              <td>${s.aviso==="Sí"?`<span class="badge badge-green">Sí</span>`:`<span class="badge badge-gray">No</span>`}</td>
+              <td>${estadoBadge(s.estado)}</td>
+              <td>
+                ${s.estado==="pendiente" ? `
+                  <div class="rowactions">
+                    <button class="btn btn-sm btn-primary" onclick="App.aprobar('${s.id}')">Aprobar</button>
+                    <button class="btn btn-sm btn-danger" onclick="App.rechazar('${s.id}')">Rechazar</button>
+                  </div>` : `<span class="subtext">—</span>`}
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+/* ---------- TAB: HISTORIAL ---------- */
+function renderTabHistorial(){
+  const f = state.filtros.historial;
+  let lista = solicitudesArray().filter(s=>s.estado==="aprobada"||s.estado==="rechazada");
+  if (f.q) lista = lista.filter(s=> nombrePersona(s.personaId).toLowerCase().includes(f.q.toLowerCase()));
+  lista.sort((a,b)=> new Date(b.fecha)-new Date(a.fecha));
+
+  return `
+    <div class="page-head"><div><h1>Historial</h1><p class="sub">Solicitudes ya resueltas</p></div></div>
+    <div class="toolbar">
+      <input type="text" placeholder="Buscar por nombre…" value="${f.q}" oninput="App.filtrar('historial','q',this.value)">
+    </div>
+    <div class="card table-card">
+      <table>
+        <thead><tr><th>Persona</th><th>Fechas</th><th>Días</th><th>TL</th><th>Estado</th></tr></thead>
+        <tbody>
+          ${lista.length===0? `<tr><td colspan="5"><div class="empty-state">Todavía no hay solicitudes resueltas.</div></td></tr>` :
+          lista.map(s=>`
+            <tr>
+              <td class="nombre">${nombrePersona(s.personaId)}</td>
+              <td><div class="req-dates"><div class="part"><span class="lab">DESDE</span>${s.inicio}</div><span class="arrow">→</span><div class="part"><span class="lab">HASTA</span>${s.fin}</div></div></td>
+              <td class="num">${s.diasHab}</td>
+              <td>${s.tl||"—"}</td>
+              <td>${estadoBadge(s.estado)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+/* ---------- TAB: ALERTAS ---------- */
+function calcularSuperposiciones(){
+  const activas = solicitudesArray().filter(s=> s.estado==="pendiente" || s.estado==="aprobada");
+  if (activas.length===0) return [];
+  const counts = new Map(); // fecha -> [solicitudId,...]
+  activas.forEach(s=>{
+    let cur = parseYMD(s.inicio); const end = parseYMD(s.fin);
+    while (cur<=end){
+      const key = formatYMD(cur);
+      if (!counts.has(key)) counts.set(key, []);
+      counts.get(key).push(s.personaId);
+      cur = addDays(cur,1);
+    }
+  });
+  const fechasConflicto = [...counts.entries()].filter(([f,ids])=>new Set(ids).size>=5).sort((a,b)=>a[0].localeCompare(b[0]));
+  // agrupar fechas contiguas en bloques
+  const bloques = [];
+  fechasConflicto.forEach(([f,ids])=>{
+    const ultimo = bloques[bloques.length-1];
+    const fDate = parseYMD(f);
+    if (ultimo && formatYMD(addDays(parseYMD(ultimo.fin),1))===f){
+      ultimo.fin = f;
+      ids.forEach(id=>ultimo.personas.add(id));
+    } else {
+      bloques.push({ inicio:f, fin:f, personas:new Set(ids) });
+    }
+  });
+  return bloques;
+}
+
+function renderTabAlertas(){
+  const pendientes = solicitudesArray().filter(s=>s.estado==="pendiente").sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
+  const bloques = calcularSuperposiciones();
+
+  return `
+    <div class="page-head"><div><h1>Alertas</h1><p class="sub">Lo que necesita tu atención ahora</p></div></div>
+
+    <h3 style="font-size:14px; margin-bottom:10px; color:var(--muted);">Pendientes de aprobación (${pendientes.length})</h3>
+    ${pendientes.length===0? `<p class="hint" style="margin-bottom:22px;">No hay solicitudes esperando aprobación.</p>` :
+      pendientes.map(s=>`
+        <div class="alert-box pend">
+          <div class="icon">🕐</div>
+          <div class="body">
+            <div class="title2">${nombrePersona(s.personaId)} pidió vacaciones</div>
+            <div class="desc">Del ${s.inicio} al ${s.fin} · ${s.diasHab} días hábiles · dirigido a ${s.tl||"—"}</div>
+            <div class="actions">
+              <button class="btn btn-sm btn-primary" onclick="App.aprobar('${s.id}')">Aprobar</button>
+              <button class="btn btn-sm btn-danger" onclick="App.rechazar('${s.id}')">Rechazar</button>
+            </div>
+          </div>
+        </div>
+      `).join("")
+    }
+
+    <h3 style="font-size:14px; margin:22px 0 10px; color:var(--muted);">Superposición de fechas (5 o más personas)</h3>
+    ${bloques.length===0? `<p class="hint">No hay superposiciones relevantes por ahora.</p>` :
+      bloques.map(b=>`
+        <div class="alert-box overlap">
+          <div class="icon">⚠️</div>
+          <div class="body">
+            <div class="title2">${b.personas.size} personas coinciden entre ${b.inicio} y ${b.fin}</div>
+            <div class="desc">${[...b.personas].map(id=>nombrePersona(id)).join(", ")}</div>
+          </div>
+        </div>
+      `).join("")
+    }`;
+}
+
+/* ---------- TAB: FERIADOS ---------- */
+function renderTabFeriados(){
+  const lista = Object.entries(feriados||{}).sort((a,b)=>a[0].localeCompare(b[0]));
+  return `
+    <div class="page-head"><div><h1>Feriados</h1><p class="sub">Se excluyen automáticamente del cálculo de días hábiles</p></div></div>
+    <div class="card" style="padding:20px 22px; margin-bottom:18px;">
+      <form onsubmit="App.agregarFeriadoForm(event)" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+        <div class="field" style="margin:0; flex:0 0 170px;"><label>Fecha</label><input required type="date" name="fecha"></div>
+        <div class="field" style="margin:0; flex:1; min-width:200px;"><label>Descripción</label><input required type="text" name="desc" placeholder="Ej: Puente turístico"></div>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+      </form>
+    </div>
+    <div class="card" style="padding:8px 20px;">
+      ${lista.length===0? `<div class="empty-state">No hay feriados cargados.</div>` :
+        lista.map(([f,d])=>`
+          <div class="feriado-row">
+            <div><span class="fd">${f}</span> ${d}</div>
+            <button class="btn-icon" onclick="App.quitarFeriadoConfirm('${f}')">⨯</button>
+          </div>
+        `).join("")}
+    </div>`;
+}
+
+/* ---------- TAB: CONFIG ---------- */
+function renderTabConfig(){
+  const activos = personasActivas(true).sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  return `
+    <div class="page-head"><div><h1>Configuración</h1><p class="sub">Personas, mails de TLs y clave maestra</p></div></div>
+
+    <div class="card" style="padding:20px 22px; margin-bottom:18px;">
+      <h3 style="font-size:15px; margin-bottom:14px;">Agregar nueva persona</h3>
+      <form onsubmit="App.crearPersonaForm(event)">
+        <div class="field-row">
+          <div class="field"><label>Nombre</label><input required type="text" name="nombre"></div>
+          <div class="field"><label>Rol</label>
+            <select name="rol"><option value="Asesor">Asesor</option><option value="TL">Team Leader</option></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Fecha de ingreso</label><input required type="date" name="ingreso"></div>
+          <div class="field"><label>Días ya tomados</label><input type="number" min="0" name="tomados" value="0"></div>
+        </div>
+        <div class="field"><label>Objetivo de días (opcional, sobreescribe la escala automática)</label><input type="number" min="0" name="objetivo" placeholder="Dejar vacío para calcular automático"></div>
+        <button class="btn btn-primary" type="submit">Agregar persona</button>
+      </form>
+    </div>
+
+    <div class="card" style="padding:20px 22px; margin-bottom:18px;">
+      <h3 style="font-size:15px; margin-bottom:14px;">Personas</h3>
+      <div style="max-height:340px; overflow-y:auto;">
+        ${activos.map(p=>`
+          <div class="feriado-row">
+            <div><span class="nombre">${p.nombre}</span> <span class="subtext">${p.rol} · ${p.ingreso}${p.activo===false?' · Desvinculado':''}</span></div>
+            <div class="rowactions">
+              <button class="btn-icon" onclick="App.abrirModal('editar','${p.id}')">✏️</button>
+              ${p.activo===false
+                ? `<button class="btn-icon" onclick="App.reactivar('${p.id}')">↺</button>`
+                : `<button class="btn-icon" onclick="App.confirmarDesvinculo('${p.id}')">⨯</button>`}
+            </div>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px 22px; margin-bottom:18px;">
+      <h3 style="font-size:15px; margin-bottom:14px;">Mail de cada Team Leader (para el mailto automático)</h3>
+      <form onsubmit="App.guardarMailsForm(event)">
+        ${TLS.map(tl=>{
+          const tlId = slugify(tl);
+          return `<div class="field"><label>${tl}</label><input type="email" name="${tlId}" value="${(config.mails&&config.mails[tlId])||''}" placeholder="mail@empresa.com"></div>`;
+        }).join("")}
+        <button class="btn btn-primary" type="submit">Guardar mails</button>
+      </form>
+    </div>
+
+    <div class="card" style="padding:20px 22px;">
+      <h3 style="font-size:15px; margin-bottom:14px;">Clave maestra</h3>
+      <form onsubmit="App.cambiarClaveForm(event)">
+        <div class="field"><label>Nueva clave</label><input required type="text" name="clave" placeholder="${config.clave}"></div>
+        <button class="btn btn-primary" type="submit">Cambiar clave</button>
+      </form>
+    </div>`;
+}
+
+/* =========================================================
+   MODALES
+========================================================= */
+function renderModal(){
+  if (!state.modal) return "";
+  if (state.modal.type==="editar") return renderModalEditar(state.modal.id);
+  if (state.modal.type==="nueva-solicitud") return renderModalNuevaSolicitud();
+  if (state.modal.type==="nueva-persona") return ""; // se maneja inline en Config
+  return "";
+}
+
+function renderModalEditar(id){
+  const p = personas[id];
+  if (!p) return "";
+  return `
+    <div class="modal-overlay" onclick="if(event.target===this) App.cerrarModal()">
+      <div class="card modal-card">
+        <div class="modal-head"><h3>Editar persona</h3><button class="btn-ghost" onclick="App.cerrarModal()">✕</button></div>
+        <form onsubmit="App.guardarEdicion(event,'${id}')">
+          <div class="field"><label>Nombre</label><input required type="text" name="nombre" value="${p.nombre}"></div>
+          <div class="field-row">
+            <div class="field"><label>Rol</label>
+              <select name="rol"><option value="Asesor" ${p.rol==='Asesor'?'selected':''}>Asesor</option><option value="TL" ${p.rol==='TL'?'selected':''}>Team Leader</option></select>
+            </div>
+            <div class="field"><label>Estado</label>
+              <select name="activo"><option value="true" ${p.activo!==false?'selected':''}>Activo</option><option value="false" ${p.activo===false?'selected':''}>Desvinculado</option></select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Fecha de ingreso</label><input required type="date" name="ingreso" value="${p.ingreso}"></div>
+            <div class="field"><label>Días tomados (histórico)</label><input type="number" min="0" name="tomados" value="${p.tomados||0}"></div>
+          </div>
+          <div class="field"><label>Objetivo de días (opcional)</label><input type="number" min="0" name="objetivo" value="${p.objetivo!=null?p.objetivo:''}" placeholder="Automático según antigüedad"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-outline" onclick="App.cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>`;
+}
+
+function renderModalNuevaSolicitud(){
+  const activos = personasActivas().sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  return `
+    <div class="modal-overlay" onclick="if(event.target===this) App.cerrarModal()">
+      <div class="card modal-card">
+        <div class="modal-head"><h3>Nueva solicitud</h3><button class="btn-ghost" onclick="App.cerrarModal()">✕</button></div>
+        <form onsubmit="App.crearSolicitudForm(event)">
+          <div class="field"><label>Persona</label>
+            <select required name="personaId">
+              <option value="">Seleccioná…</option>
+              ${activos.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Fecha inicio</label><input required type="date" name="inicio"></div>
+            <div class="field"><label>Fecha fin</label><input required type="date" name="fin"></div>
+          </div>
+          <div class="field"><label>Team Leader</label>
+            <select name="tl"><option value="">—</option>${TLS.map(tl=>`<option value="${tl}">${tl}</option>`).join("")}</select>
+          </div>
+          <div class="field"><label>Observaciones</label><textarea name="obs"></textarea></div>
+          <div class="field-row">
+            <div class="field">
+              <label>Autorización del líder</label>
+              <div class="toggle-pair" id="tp-aprobacion">
+                <button type="button" class="on-yes" onclick="App.toggleField(this,'aprobacion','Sí')">Sí</button>
+                <button type="button" class="on-no selected" onclick="App.toggleField(this,'aprobacion','No')">No</button>
+              </div>
+              <input type="hidden" name="aprobacion" value="No">
+            </div>
+            <div class="field">
+              <label>Aviso a agencia</label>
+              <div class="toggle-pair" id="tp-aviso">
+                <button type="button" class="on-yes" onclick="App.toggleField(this,'aviso','Sí')">Sí</button>
+                <button type="button" class="on-no selected" onclick="App.toggleField(this,'aviso','No')">No</button>
+              </div>
+              <input type="hidden" name="aviso" value="No">
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-outline" onclick="App.cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Crear solicitud</button>
+          </div>
+        </form>
+      </div>
+    </div>`;
+}
+
+/* =========================================================
+   ACCIONES (expuestas en window.App)
+========================================================= */
+const App = {
+  ir(screen){
+    state.screen = screen;
+    state.adminLoginError = "";
+    render();
+  },
+  seleccionarAsesor(id){
+    state.asesorSeleccionado = id || null;
+    render();
+  },
+  async enviarSolicitudAsesor(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const inicio = fd.get("inicio"), fin = fd.get("fin");
+    if (parseYMD(fin) < parseYMD(inicio)){ toast("La fecha fin no puede ser anterior al inicio"); return; }
+    const personaId = state.asesorSeleccionado;
+    const tl = fd.get("tl"); const obs = fd.get("obs");
+    await crearSolicitud({ personaId, inicio, fin, tl, obs, estado:"pendiente", origen:"asesor" });
+    toast("Solicitud enviada. Quedó pendiente de aprobación.");
+    const persona = personas[personaId];
+    const mailTL = config.mails && config.mails[slugify(tl)];
+    if (mailTL){
+      const asunto = encodeURIComponent(`Solicitud de vacaciones — ${persona.nombre}`);
+      const cuerpo = encodeURIComponent(`Hola ${tl},\n\n${persona.nombre} solicita vacaciones del ${inicio} al ${fin}.\nObservaciones: ${obs||"—"}\n\nSaludos.`);
+      window.location.href = `mailto:${mailTL}?subject=${asunto}&body=${cuerpo}`;
+    }
+    e.target.reset();
+    render();
+  },
+  intentarLoginAdmin(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const clave = fd.get("clave");
+    if (clave === (config.clave || CLAVE_DEFAULT)){
+      state.screen = "admin"; state.adminLoginError = "";
+    } else {
+      state.adminLoginError = "Clave incorrecta.";
+    }
+    render();
+  },
+  setAdminTab(tab){ state.adminTab = tab; render(); },
+  filtrar(seccion, campo, valor){
+    state.filtros[seccion][campo] = valor;
+    render();
+  },
+  abrirModal(type, id){ state.modal = { type, id }; render(); },
+  cerrarModal(){ state.modal = null; render(); },
+  async guardarEdicion(e,id){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const objetivoRaw = fd.get("objetivo");
+    await guardarPersona(id, {
+      nombre: fd.get("nombre"), rol: fd.get("rol"), ingreso: fd.get("ingreso"),
+      tomados: Number(fd.get("tomados"))||0,
+      objetivo: objetivoRaw!=="" ? Number(objetivoRaw) : null,
+      activo: fd.get("activo")==="true",
+      fechaDesvinculacion: fd.get("activo")==="true" ? null : (personas[id].fechaDesvinculacion || formatYMD(today())),
+    });
+    toast("Cambios guardados.");
+    state.modal = null; render();
+  },
+  async confirmarDesvinculo(id){
+    if (confirm(`¿Desvincular a ${personas[id].nombre}?`)){
+      await desvincularPersona(id); toast("Persona desvinculada.");
+    }
+  },
+  async reactivar(id){ await reactivarPersona(id); toast("Persona reactivada."); },
+  async aprobar(id){ await actualizarEstadoSolicitud(id,"aprobada"); toast("Solicitud aprobada."); },
+  async rechazar(id){ await actualizarEstadoSolicitud(id,"rechazada"); toast("Solicitud rechazada."); },
+  toggleField(btn, fieldName, val){
+    const wrap = btn.parentElement;
+    wrap.querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+    btn.classList.add("selected");
+    wrap.nextElementSibling.value = val;
+  },
+  async crearSolicitudForm(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const inicio = fd.get("inicio"), fin = fd.get("fin");
+    if (parseYMD(fin) < parseYMD(inicio)){ toast("La fecha fin no puede ser anterior al inicio"); return; }
+    const aprobacion = fd.get("aprobacion");
+    const estado = aprobacion==="Sí" ? "aprobada" : "pendiente";
+    await crearSolicitud({
+      personaId: fd.get("personaId"), inicio, fin, tl: fd.get("tl"), obs: fd.get("obs"),
+      aprobacion, aviso: fd.get("aviso"), estado, origen:"admin"
+    });
+    toast("Solicitud creada.");
+    state.modal = null; render();
+  },
+  async crearPersonaForm(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    await crearPersona({
+      nombre: fd.get("nombre"), rol: fd.get("rol"), ingreso: fd.get("ingreso"),
+      tomados: fd.get("tomados"), objetivo: fd.get("objetivo"),
+    });
+    toast("Persona agregada.");
+    e.target.reset(); render();
+  },
+  async guardarMailsForm(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    for (const tl of TLS){
+      const tlId = slugify(tl);
+      await guardarMailTL(tlId, fd.get(tlId) || "");
+    }
+    toast("Mails guardados.");
+  },
+  async cambiarClaveForm(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    await guardarClave(fd.get("clave"));
+    toast("Clave actualizada.");
+    e.target.reset();
+  },
+  async agregarFeriadoForm(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    await agregarFeriado(fd.get("fecha"), fd.get("desc"));
+    toast("Feriado agregado.");
+    e.target.reset(); render();
+  },
+  async quitarFeriadoConfirm(fecha){
+    if (confirm(`¿Quitar el feriado del ${fecha}?`)){
+      await quitarFeriado(fecha); toast("Feriado quitado.");
+    }
+  },
+};
+window.App = App;
+
+/* =========================================================
+   ARRANQUE
+========================================================= */
+render();
+seedIfEmpty().finally(iniciarListeners);
+</script>
+</body>
+</html>
