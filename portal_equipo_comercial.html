@@ -184,6 +184,9 @@
   .pres-chip-A { background:#00a650; }
   .pres-chip-F { background:#f0a500; }
   .pres-chip-T { background:#9b59b6; }
+  .pres-chip-X { background:#e74c3c; }
+  .pres-up-label { font-size:9px; color:var(--mp-gray-400); font-weight:700; margin:2px 0 1px; }
+  .pres-teams.up .pres-chip { opacity:.72; }
   .pres-month-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
   .pres-month-btn { border:1.5px solid var(--mp-gray-200); background:#fff; color:var(--mp-gray-600); border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
   .pres-month-btn.active { border-color:var(--mp-blue); color:var(--mp-blue); background:var(--mp-blue-light); }
@@ -1107,10 +1110,12 @@
       <span style="font-size:12px;font-weight:700;color:var(--mp-gray-600)">Equipos:</span>
       <span class="pres-chip pres-chip-M" style="font-size:12px;padding:4px 12px">🔵 Majo · 13p</span>
       <span class="pres-chip pres-chip-A" style="font-size:12px;padding:4px 12px">🟢 Ani · 13p</span>
-      <span class="pres-chip pres-chip-F" style="font-size:12px;padding:4px 12px">🟠 Fran · 12p</span>
-      <span class="pres-chip pres-chip-T" style="font-size:12px;padding:4px 12px">🟣 Tomi · 12p</span>
-      <span style="margin-left:8px;font-size:12px;color:var(--mp-gray-600);font-weight:700">Capacidad (máx 40p):</span>
-      <span style="font-size:12px;color:var(--mp-gray-600)">🟢 ≤34p &nbsp;🟡 35–40p &nbsp;🔴 &gt;40p</span>
+      <span class="pres-chip pres-chip-F" style="font-size:12px;padding:4px 12px">🟠 Fran · 13p</span>
+      <span class="pres-chip pres-chip-T" style="font-size:12px;padding:4px 12px">🟣 Tomi · 13p</span>
+      <span class="pres-chip pres-chip-X" style="font-size:12px;padding:4px 12px">🔴 Fausto · 7p</span>
+      <span style="margin-left:8px;font-size:12px;color:var(--mp-gray-600);font-weight:700">Cowork (39 asientos):</span>
+      <span style="font-size:12px;color:var(--mp-gray-600)">🟢 &lt;39p &nbsp;🟡 39p (completo) &nbsp;🔴 &gt;39p &nbsp;·&nbsp; ↑ = sube arriba</span>
+      <div style="width:100%;font-size:11px;color:var(--mp-gray-400);margin-top:4px">🆕 Desde el 5 de octubre se suma el equipo Fausto. Julio a septiembre se muestran con la configuración anterior (Fran y Tomi 12p, máx. 40p).</div>
     </div>
 
     <div class="pres-month-nav" id="presMonthNav"></div>
@@ -1119,7 +1124,7 @@
     </div>
 
     <div style="margin-top:14px;text-align:right">
-      <a href="https://docs.google.com/spreadsheets/d/1bZPoM5g9n9flcqjbw_JaBLB4Uk1TOJWNnENre2YBqDo/edit?gid=1714008600"
+      <a href="https://docs.google.com/spreadsheets/d/1HJS_uKNL-rild8HLWE4EMsWiis2I7jMiF8OK2uY_DwM/edit?gid=1696911585"
          target="_blank"
          style="font-size:12px;color:var(--mp-blue);font-weight:600;text-decoration:none">
         ↗ Ver planilla completa en Sheets
@@ -1238,13 +1243,16 @@
     '2026-09-21':{t:['A','M','T'],p:38},'2026-09-24':{t:['A','F','T'],p:37},
     '2026-09-25':{t:['M','F'],p:25},'2026-09-28':{t:['A','F','T'],p:37},
     '2026-09-30':{t:['A','M','F'],p:38},
-    '2026-10-01':{t:['M','T'],p:25},'2026-10-05':{t:['M','F','T'],p:37},
-    '2026-10-08':{t:['A','M','F'],p:38},'2026-10-09':{t:['A','T'],p:25},
-    '2026-10-12':{feriado:'Diversidad Cultural'},'2026-10-14':{t:['A','F','T'],p:37},
-    '2026-10-15':{t:['A','M','F'],p:38},'2026-10-19':{t:['A','M','T'],p:38},
-    '2026-10-22':{t:['A','F','T'],p:37},'2026-10-23':{t:['M','F'],p:25},
-    '2026-10-26':{t:['A','F','T'],p:37},'2026-10-28':{t:['A','M','F'],p:38},
-    '2026-10-29':{t:['M','T'],p:25},
+    '2026-10-01':{t:['M','T'],p:25},
+    '2026-10-05':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-10-08':{t:['M','F','T'],u:['X','A'],p:39,up:20},
+    '2026-10-12':{feriado:'Diversidad Cultural'},
+    '2026-10-14':{t:['A','M','T'],u:['X','F'],p:39,up:20},
+    '2026-10-16':{t:['A','M','X'],u:['F','T'],p:33,up:26},
+    '2026-10-19':{t:['A','F','X'],u:['M','T'],p:33,up:26},
+    '2026-10-22':{t:['A','F','T'],u:['X','M'],p:39,up:20},
+    '2026-10-26':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-10-28':{t:['A','M','F'],u:['X','T'],p:39,up:20},
     '2026-11-02':{t:['M','F','T'],p:37},'2026-11-05':{t:['A','M','F'],p:38},
     '2026-11-06':{t:['A','T'],p:25},'2026-11-09':{t:['A','M','F'],p:38},
     '2026-11-11':{t:['A','F','T'],p:37},'2026-11-12':{t:['M','T'],p:25},
@@ -1261,7 +1269,7 @@
   };
   const PRES_MONTHS=[{n:'Julio',m:7},{n:'Agosto',m:8},{n:'Septiembre',m:9},{n:'Octubre',m:10},{n:'Noviembre',m:11},{n:'Diciembre',m:12}];
   const PRES_DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const PRES_TNAMES={M:'Majo',A:'Ani',F:'Fran',T:'Tomi'};
+  const PRES_TNAMES={M:'Majo',A:'Ani',F:'Fran',T:'Tomi',X:'Fausto'};
 
   function initPres(){
     const nav=document.getElementById('presMonthNav');
@@ -1289,8 +1297,14 @@
       else if(info?.feriado) h+=`<div class="feriado-label">🎉 ${info.feriado}</div>`;
       else if(info?.t){
         h+='<div class="pres-teams">'+info.t.map(t=>`<span class="pres-chip pres-chip-${t}">${PRES_TNAMES[t]}</span>`).join('')+'</div>';
-        const e=info.p>40?'🔴':info.p>=35?'🟡':'🟢';
-        h+=`<div class="pres-total">${e} ${info.p}p</div>`;
+        if(info.u){
+          if(info.u.length) h+='<div class="pres-up-label">↑ Sube arriba</div><div class="pres-teams up">'+info.u.map(t=>`<span class="pres-chip pres-chip-${t}">${PRES_TNAMES[t]}</span>`).join('')+'</div>';
+          const e=info.p>39?'🔴':info.p===39?'🟡':'🟢';
+          h+=`<div class="pres-total">${e} ${info.p}p cowork · ↑${info.up}p</div>`;
+        } else {
+          const e=info.p>40?'🔴':info.p>=35?'🟡':'🟢';
+          h+=`<div class="pres-total">${e} ${info.p}p</div>`;
+        }
       }
       h+='</div>';
     }
