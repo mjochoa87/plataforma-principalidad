@@ -177,6 +177,34 @@
   .home-section-card.s-files::before{ background: linear-gradient(90deg,#00b09b,#96c93d); }
   .home-section-card.s-pres::before { background: linear-gradient(90deg,#2c3e50,#3498db); }
 
+  /* INCENTIVOS */
+  .inc-wrap { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); overflow-x:auto; max-width:760px; }
+  .inc-bono-wrap { margin-top:20px; max-width:560px; }
+  .inc-table { width:100%; border-collapse:collapse; font-size:13px; min-width:560px; }
+  .inc-table th { background:#cfe2f3; color:#1a1a1a; font-weight:700; font-size:12px; padding:10px 12px; text-align:center; line-height:1.3; }
+  .inc-table th.inc-th-first { background:#134f5c; color:#fff; }
+  .inc-table td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--mp-gray-200); font-variant-numeric:tabular-nums; }
+  .inc-table td.c { text-align:center; }
+  .inc-table tr.inc-start td { border-top:2px solid #222; }
+  .inc-table tr.inc-base td { background:#f1f1f1; border-top:2px solid #222; border-bottom:2px solid #222; }
+  .inc-table td.inc-total { font-weight:800; }
+  .inc-table td.inc-level { color:#fff; font-weight:800; font-size:15px; text-align:center; vertical-align:middle; min-width:90px; border-bottom:none; }
+  .inc-bronce { background:#783f04 !important; }
+  .inc-plata  { background:#666 !important; }
+  .inc-oro    { background:#bf9000 !important; }
+  .inc-bono   { background:#6aa84f !important; }
+  .inc-table .short { display:none; }
+  @media (max-width: 480px) {
+    .inc-wrap { margin-left:-32px; margin-right:-32px; border-radius:0; }
+    .inc-table { min-width:0; font-size:10.5px; }
+    .inc-table th { font-size:9px; padding:8px 3px; }
+    .inc-table td { padding:8px 3px; }
+    .inc-table td.inc-level { font-size:11.5px; min-width:0; padding:8px 3px; }
+    .inc-table .long { display:none; }
+    .inc-table .short { display:inline; }
+  }
+  .home-section-card.s-inc::before { background: linear-gradient(90deg,#bf9000,#783f04); }
+
   /* PRESENCIALIDAD CALENDAR */
   .pres-legend { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:20px; background:#fff; border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow); }
   .pres-chip { display:inline-block; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700; color:#fff; }
@@ -431,6 +459,18 @@
         <div class="home-section-meta">
           <span class="home-section-count">Jul–Dic 2026</span>
           <button class="home-section-cta">Ver calendario →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-inc" onclick="navTo('incentivos')">
+        <div class="home-section-icon">💰</div>
+        <div>
+          <div class="home-section-name">Incentivos</div>
+          <div class="home-section-desc">Tabla de sueldo variable por nivel (Bronce, Plata y Oro) según el cumplimiento.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">Ajuste Jun-2025</span>
+          <button class="home-section-cta">Ver incentivos →</button>
         </div>
       </div>
 
@@ -1095,6 +1135,57 @@
         <span class="admin-card-link">↗ Ver reporte</span>
       </a>
 
+    </div>
+  </div>
+
+  <!-- ══════════════ INCENTIVOS ══════════════ -->
+  <div id="incentivos" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">💰 Incentivos</div>
+      <div class="page-subtitle">Sueldo variable según el cumplimiento · Ajuste Jun-2025</div>
+    </div>
+    <div class="inc-wrap">
+      <table class="inc-table">
+        <thead>
+          <tr><th class="inc-th-first">Nivel</th><th><span class="long">Cumplimiento</span><span class="short">Cumpl.</span><br>mínimo</th><th><span class="long">Cumplimiento</span><span class="short">Cumpl.</span><br>máximo</th><th>Sueldo fijo /<br>básico</th><th>Sueldo<br>variable</th><th>Sueldo<br>total</th></tr>
+        </thead>
+        <tbody>
+          <tr class="inc-start"><td class="inc-level inc-bronce" rowspan="11">Bronce</td><td class="c">—</td><td class="c">60%</td><td>$1.521.000</td><td>$0</td><td class="inc-total">$1.521.000</td></tr>
+          <tr class=""><td class="c">61%</td><td class="c">70%</td><td>$1.521.000</td><td>$90.000</td><td class="inc-total">$1.611.000</td></tr>
+          <tr class=""><td class="c">71%</td><td class="c">80%</td><td>$1.521.000</td><td>$120.000</td><td class="inc-total">$1.641.000</td></tr>
+          <tr class=""><td class="c">80%</td><td class="c">90%</td><td>$1.521.000</td><td>$210.000</td><td class="inc-total">$1.731.000</td></tr>
+          <tr class=""><td class="c">90%</td><td class="c">100%</td><td>$1.521.000</td><td>$300.000</td><td class="inc-total">$1.821.000</td></tr>
+          <tr class=" inc-base"><td class="c">100%</td><td class="c">120%</td><td>$1.521.000</td><td>$500.000</td><td class="inc-total">$2.021.000</td></tr>
+          <tr class=""><td class="c">120%</td><td class="c">170%</td><td>$1.521.000</td><td>$750.000</td><td class="inc-total">$2.271.000</td></tr>
+          <tr class=""><td class="c">170%</td><td class="c">220%</td><td>$1.521.000</td><td>$1.050.000</td><td class="inc-total">$2.571.000</td></tr>
+          <tr class=""><td class="c">220%</td><td class="c">270%</td><td>$1.521.000</td><td>$1.400.000</td><td class="inc-total">$2.921.000</td></tr>
+          <tr class=""><td class="c">270%</td><td class="c">320%</td><td>$1.521.000</td><td>$1.800.000</td><td class="inc-total">$3.321.000</td></tr>
+          <tr class=""><td class="c">320%</td><td class="c">—</td><td>$1.521.000</td><td>$2.400.000</td><td class="inc-total">$3.921.000</td></tr>
+          <tr class="inc-start inc-base"><td class="inc-level inc-plata" rowspan="6">Plata</td><td class="c">100%</td><td class="c">120%</td><td>$1.521.000</td><td>$600.000</td><td class="inc-total">$2.121.000</td></tr>
+          <tr class=""><td class="c">120%</td><td class="c">170%</td><td>$1.521.000</td><td>$900.000</td><td class="inc-total">$2.421.000</td></tr>
+          <tr class=""><td class="c">170%</td><td class="c">220%</td><td>$1.521.000</td><td>$1.260.000</td><td class="inc-total">$2.781.000</td></tr>
+          <tr class=""><td class="c">220%</td><td class="c">270%</td><td>$1.521.000</td><td>$1.680.000</td><td class="inc-total">$3.201.000</td></tr>
+          <tr class=""><td class="c">270%</td><td class="c">320%</td><td>$1.521.000</td><td>$2.160.000</td><td class="inc-total">$3.681.000</td></tr>
+          <tr class=""><td class="c">320%</td><td class="c">—</td><td>$1.521.000</td><td>$2.880.000</td><td class="inc-total">$4.401.000</td></tr>
+          <tr class="inc-start inc-base"><td class="inc-level inc-oro" rowspan="6">Oro</td><td class="c">100%</td><td class="c">120%</td><td>$1.521.000</td><td>$720.000</td><td class="inc-total">$2.241.000</td></tr>
+          <tr class=""><td class="c">120%</td><td class="c">170%</td><td>$1.521.000</td><td>$1.080.000</td><td class="inc-total">$2.601.000</td></tr>
+          <tr class=""><td class="c">170%</td><td class="c">220%</td><td>$1.521.000</td><td>$1.512.000</td><td class="inc-total">$3.033.000</td></tr>
+          <tr class=""><td class="c">220%</td><td class="c">270%</td><td>$1.521.000</td><td>$2.016.000</td><td class="inc-total">$3.537.000</td></tr>
+          <tr class=""><td class="c">270%</td><td class="c">320%</td><td>$1.521.000</td><td>$2.592.000</td><td class="inc-total">$4.113.000</td></tr>
+          <tr class=""><td class="c">320%</td><td class="c">—</td><td>$1.521.000</td><td>$3.456.000</td><td class="inc-total">$4.977.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="inc-wrap inc-bono-wrap">
+      <table class="inc-table">
+        <thead>
+          <tr><th class="inc-th-first">Bono primeros meses</th><th>Sueldo fijo /<br>básico</th><th>Sueldo<br>variable</th><th>Sueldo<br>total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="inc-level inc-bono">Bono</td><td>$1.521.000</td><td>$324.000</td><td class="inc-total">$1.845.000</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
