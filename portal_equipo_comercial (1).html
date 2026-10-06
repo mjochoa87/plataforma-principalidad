@@ -178,6 +178,34 @@
   .home-section-card.s-pres::before { background: linear-gradient(90deg,#2c3e50,#3498db); }
   .home-section-card.s-vac::before  { background: linear-gradient(90deg,#2d5a3d,#4c8c66); }
 
+  /* INCENTIVOS */
+  .inc-wrap { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); overflow-x:auto; max-width:760px; }
+  .inc-bono-wrap { margin-top:20px; max-width:560px; }
+  .inc-table { width:100%; border-collapse:collapse; font-size:13px; min-width:560px; }
+  .inc-table th { background:#cfe2f3; color:#1a1a1a; font-weight:700; font-size:12px; padding:10px 12px; text-align:center; line-height:1.3; }
+  .inc-table th.inc-th-first { background:#134f5c; color:#fff; }
+  .inc-table td { padding:9px 12px; text-align:right; border-bottom:1px solid var(--mp-gray-200); font-variant-numeric:tabular-nums; }
+  .inc-table td.c { text-align:center; }
+  .inc-table tr.inc-start td { border-top:2px solid #222; }
+  .inc-table tr.inc-base td { background:#f1f1f1; border-top:2px solid #222; border-bottom:2px solid #222; }
+  .inc-table td.inc-total { font-weight:800; }
+  .inc-table td.inc-level { color:#fff; font-weight:800; font-size:15px; text-align:center; vertical-align:middle; min-width:90px; border-bottom:none; }
+  .inc-bronce { background:#783f04 !important; }
+  .inc-plata  { background:#666 !important; }
+  .inc-oro    { background:#bf9000 !important; }
+  .inc-bono   { background:#6aa84f !important; }
+  .inc-table .short { display:none; }
+  @media (max-width: 480px) {
+    .inc-wrap { margin-left:-32px; margin-right:-32px; border-radius:0; }
+    .inc-table { min-width:0; font-size:10.5px; }
+    .inc-table th { font-size:9px; padding:8px 3px; }
+    .inc-table td { padding:8px 3px; }
+    .inc-table td.inc-level { font-size:11.5px; min-width:0; padding:8px 3px; }
+    .inc-table .long { display:none; }
+    .inc-table .short { display:inline; }
+  }
+  .home-section-card.s-inc::before { background: linear-gradient(90deg,#bf9000,#783f04); }
+
   /* PRESENCIALIDAD CALENDAR */
   .pres-legend { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:20px; background:#fff; border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow); }
   .pres-chip { display:inline-block; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:700; color:#fff; }
@@ -185,6 +213,9 @@
   .pres-chip-A { background:#00a650; }
   .pres-chip-F { background:#f0a500; }
   .pres-chip-T { background:#9b59b6; }
+  .pres-chip-X { background:#e74c3c; }
+  .pres-up-label { font-size:9px; color:var(--mp-gray-400); font-weight:700; margin:2px 0 1px; }
+  .pres-teams.up .pres-chip { opacity:.72; }
   .pres-month-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
   .pres-month-btn { border:1.5px solid var(--mp-gray-200); background:#fff; color:var(--mp-gray-600); border-radius:8px; padding:8px 18px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
   .pres-month-btn.active { border-color:var(--mp-blue); color:var(--mp-blue); background:var(--mp-blue-light); }
@@ -303,7 +334,7 @@
     <div class="logo-icon">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
     </div>
-    <span class="logo-text">Plataforma <span>Principalidad</span></span>
+    <span class="logo-text">El cuaderno <span>de Principalidad de Majo</span></span>
   </a>
   <span class="header-pill">Equipo Principalidad</span>
   <div class="header-right">
@@ -432,7 +463,7 @@
         </div>
       </div>
 
-      <div class="home-section-card s-vac" onclick="window.open('vacaciones_principalidad.html','_blank')">
+      <div class="home-section-card s-vac" onclick="navTo('vacaciones')">
         <div class="home-section-icon">🌴</div>
         <div>
           <div class="home-section-name">Vacaciones</div>
@@ -441,6 +472,18 @@
         <div class="home-section-meta">
           <span class="home-section-count">Asesores y admin</span>
           <button class="home-section-cta">Ir a vacaciones →</button>
+        </div>
+      </div>
+
+      <div class="home-section-card s-inc" onclick="navTo('incentivos')">
+        <div class="home-section-icon">💰</div>
+        <div>
+          <div class="home-section-name">Incentivos</div>
+          <div class="home-section-desc">Tabla de sueldo variable por nivel (Bronce, Plata y Oro) según el cumplimiento.</div>
+        </div>
+        <div class="home-section-meta">
+          <span class="home-section-count">Ajuste Jun-2025</span>
+          <button class="home-section-cta">Ver incentivos →</button>
         </div>
       </div>
 
@@ -993,7 +1036,7 @@
       <div class="tab-bar">
         <div class="tab-btn active" data-tool="suscripcion" onclick="switchTab('file','suscripcion',this)">📋 Plan de Suscripción</div>
         <div class="tab-btn" data-tool="pedido-point" onclick="switchTab('file','pedido-point',this)">📱 Pedido de Point</div>
-        <div class="tab-btn" data-tool="pedido-cuit" onclick="switchTab('file','pedido-cuit',this)">🏢 Pedido de CUIT</div>
+        <div class="tab-btn" data-tool="pedido-referidos" onclick="switchTab('file','pedido-referidos',this)">🎁 Pedido de Referidos</div>
         <div class="tab-btn" data-tool="respuestas-reposicion" onclick="switchTab('file','respuestas-reposicion',this)">📦 Respuestas Reposición</div>
       </div>
 
@@ -1013,12 +1056,12 @@
         <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1TXPbe_fyH41ELyEJVloksk0hjF9SE0XaOoRAVxET980/edit?gid=588232678&rm=minimal" loading="lazy"></iframe>
       </div>
 
-      <div class="tab-panel" id="file-pedido-cuit">
+      <div class="tab-panel" id="file-pedido-referidos">
         <div class="panel-header">
-          <span class="panel-header-title">🏢 Pedido de CUIT — Principalidad Oportunidades</span>
-          <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/1hG4aHUrZGSYbEctEYwsqDtBhCHCYjSSgfTygAyp8MqY/edit?pli=1&gid=1507430402#gid=1507430402" target="_blank">↗ Abrir en Sheets</a>
+          <span class="panel-header-title">🎁 Pedido de Referidos</span>
+          <a class="panel-ext-link" href="https://docs.google.com/spreadsheets/d/1XBHC55RrW23Af7plOqPYUtdhFLKc9NHJmYi1ppJN0YU/edit?gid=0#gid=0" target="_blank">↗ Abrir en Sheets</a>
         </div>
-        <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1hG4aHUrZGSYbEctEYwsqDtBhCHCYjSSgfTygAyp8MqY/edit?gid=1507430402&rm=minimal" loading="lazy"></iframe>
+        <iframe class="panel-iframe" src="https://docs.google.com/spreadsheets/d/1XBHC55RrW23Af7plOqPYUtdhFLKc9NHJmYi1ppJN0YU/edit?gid=0&rm=minimal" loading="lazy"></iframe>
       </div>
 
       <div class="tab-panel" id="file-respuestas-reposicion">
@@ -1108,6 +1151,57 @@
     </div>
   </div>
 
+  <!-- ══════════════ INCENTIVOS ══════════════ -->
+  <div id="incentivos" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">💰 Incentivos</div>
+      <div class="page-subtitle">Sueldo variable según el cumplimiento · Ajuste Jun-2025</div>
+    </div>
+    <div class="inc-wrap">
+      <table class="inc-table">
+        <thead>
+          <tr><th class="inc-th-first">Nivel</th><th><span class="long">Cumplimiento</span><span class="short">Cumpl.</span><br>mínimo</th><th><span class="long">Cumplimiento</span><span class="short">Cumpl.</span><br>máximo</th><th>Sueldo fijo /<br>básico</th><th>Sueldo<br>variable</th><th>Sueldo<br>total</th></tr>
+        </thead>
+        <tbody>
+          <tr class="inc-start"><td class="inc-level inc-bronce" rowspan="11">Bronce</td><td class="c">—</td><td class="c">60%</td><td>$1.521.000</td><td>$0</td><td class="inc-total">$1.521.000</td></tr>
+          <tr class=""><td class="c">61%</td><td class="c">70%</td><td>$1.521.000</td><td>$90.000</td><td class="inc-total">$1.611.000</td></tr>
+          <tr class=""><td class="c">71%</td><td class="c">80%</td><td>$1.521.000</td><td>$120.000</td><td class="inc-total">$1.641.000</td></tr>
+          <tr class=""><td class="c">80%</td><td class="c">90%</td><td>$1.521.000</td><td>$210.000</td><td class="inc-total">$1.731.000</td></tr>
+          <tr class=""><td class="c">90%</td><td class="c">100%</td><td>$1.521.000</td><td>$300.000</td><td class="inc-total">$1.821.000</td></tr>
+          <tr class=" inc-base"><td class="c">100%</td><td class="c">120%</td><td>$1.521.000</td><td>$500.000</td><td class="inc-total">$2.021.000</td></tr>
+          <tr class=""><td class="c">120%</td><td class="c">170%</td><td>$1.521.000</td><td>$750.000</td><td class="inc-total">$2.271.000</td></tr>
+          <tr class=""><td class="c">170%</td><td class="c">220%</td><td>$1.521.000</td><td>$1.050.000</td><td class="inc-total">$2.571.000</td></tr>
+          <tr class=""><td class="c">220%</td><td class="c">270%</td><td>$1.521.000</td><td>$1.400.000</td><td class="inc-total">$2.921.000</td></tr>
+          <tr class=""><td class="c">270%</td><td class="c">320%</td><td>$1.521.000</td><td>$1.800.000</td><td class="inc-total">$3.321.000</td></tr>
+          <tr class=""><td class="c">320%</td><td class="c">—</td><td>$1.521.000</td><td>$2.400.000</td><td class="inc-total">$3.921.000</td></tr>
+          <tr class="inc-start inc-base"><td class="inc-level inc-plata" rowspan="6">Plata</td><td class="c">100%</td><td class="c">120%</td><td>$1.521.000</td><td>$600.000</td><td class="inc-total">$2.121.000</td></tr>
+          <tr class=""><td class="c">120%</td><td class="c">170%</td><td>$1.521.000</td><td>$900.000</td><td class="inc-total">$2.421.000</td></tr>
+          <tr class=""><td class="c">170%</td><td class="c">220%</td><td>$1.521.000</td><td>$1.260.000</td><td class="inc-total">$2.781.000</td></tr>
+          <tr class=""><td class="c">220%</td><td class="c">270%</td><td>$1.521.000</td><td>$1.680.000</td><td class="inc-total">$3.201.000</td></tr>
+          <tr class=""><td class="c">270%</td><td class="c">320%</td><td>$1.521.000</td><td>$2.160.000</td><td class="inc-total">$3.681.000</td></tr>
+          <tr class=""><td class="c">320%</td><td class="c">—</td><td>$1.521.000</td><td>$2.880.000</td><td class="inc-total">$4.401.000</td></tr>
+          <tr class="inc-start inc-base"><td class="inc-level inc-oro" rowspan="6">Oro</td><td class="c">100%</td><td class="c">120%</td><td>$1.521.000</td><td>$720.000</td><td class="inc-total">$2.241.000</td></tr>
+          <tr class=""><td class="c">120%</td><td class="c">170%</td><td>$1.521.000</td><td>$1.080.000</td><td class="inc-total">$2.601.000</td></tr>
+          <tr class=""><td class="c">170%</td><td class="c">220%</td><td>$1.521.000</td><td>$1.512.000</td><td class="inc-total">$3.033.000</td></tr>
+          <tr class=""><td class="c">220%</td><td class="c">270%</td><td>$1.521.000</td><td>$2.016.000</td><td class="inc-total">$3.537.000</td></tr>
+          <tr class=""><td class="c">270%</td><td class="c">320%</td><td>$1.521.000</td><td>$2.592.000</td><td class="inc-total">$4.113.000</td></tr>
+          <tr class=""><td class="c">320%</td><td class="c">—</td><td>$1.521.000</td><td>$3.456.000</td><td class="inc-total">$4.977.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="inc-wrap inc-bono-wrap">
+      <table class="inc-table">
+        <thead>
+          <tr><th class="inc-th-first">Bono primeros meses</th><th>Sueldo fijo /<br>básico</th><th>Sueldo<br>variable</th><th>Sueldo<br>total</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="inc-level inc-bono">Bono</td><td>$1.521.000</td><td>$324.000</td><td class="inc-total">$1.845.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- ══════════════ PRESENCIALIDAD ══════════════ -->
   <div id="presencialidad" class="page">
     <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
@@ -1121,17 +1215,19 @@
         <div style="font-weight:700; font-size:14px; color:var(--mp-gray-900)">🌴 ¿Necesitás pedir vacaciones?</div>
         <div style="font-size:12px; color:var(--mp-gray-600); margin-top:2px;">Consultá tu saldo de días y enviá tu solicitud desde la nueva herramienta del equipo.</div>
       </div>
-      <a href="vacaciones_principalidad.html" target="_blank" style="background:var(--mp-blue); color:#fff; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; white-space:nowrap;">Ir a Vacaciones →</a>
+      <button onclick="navTo('vacaciones')" style="background:var(--mp-blue); color:#fff; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:700; border:none; cursor:pointer; white-space:nowrap;">Ir a Vacaciones →</button>
     </div>
 
     <div class="pres-legend">
       <span style="font-size:12px;font-weight:700;color:var(--mp-gray-600)">Equipos:</span>
       <span class="pres-chip pres-chip-M" style="font-size:12px;padding:4px 12px">🔵 Majo · 13p</span>
       <span class="pres-chip pres-chip-A" style="font-size:12px;padding:4px 12px">🟢 Ani · 13p</span>
-      <span class="pres-chip pres-chip-F" style="font-size:12px;padding:4px 12px">🟠 Fran · 12p</span>
-      <span class="pres-chip pres-chip-T" style="font-size:12px;padding:4px 12px">🟣 Tomi · 12p</span>
-      <span style="margin-left:8px;font-size:12px;color:var(--mp-gray-600);font-weight:700">Capacidad (máx 40p):</span>
-      <span style="font-size:12px;color:var(--mp-gray-600)">🟢 ≤34p &nbsp;🟡 35–40p &nbsp;🔴 &gt;40p</span>
+      <span class="pres-chip pres-chip-F" style="font-size:12px;padding:4px 12px">🟠 Fran · 13p</span>
+      <span class="pres-chip pres-chip-T" style="font-size:12px;padding:4px 12px">🟣 Tomi · 13p</span>
+      <span class="pres-chip pres-chip-X" style="font-size:12px;padding:4px 12px">🔴 Fausto · 7p</span>
+      <span style="margin-left:8px;font-size:12px;color:var(--mp-gray-600);font-weight:700">Cowork (39 asientos):</span>
+      <span style="font-size:12px;color:var(--mp-gray-600)">🟢 &lt;39p &nbsp;🟡 39p (completo) &nbsp;🔴 &gt;39p &nbsp;·&nbsp; ↑ = sube arriba</span>
+      <div style="width:100%;font-size:11px;color:var(--mp-gray-400);margin-top:4px">🆕 Desde el 5 de octubre se suma el equipo Fausto. Julio a septiembre se muestran con la configuración anterior (Fran y Tomi 12p, máx. 40p).</div>
     </div>
 
     <div class="pres-month-nav" id="presMonthNav"></div>
@@ -1140,11 +1236,28 @@
     </div>
 
     <div style="margin-top:14px;text-align:right">
-      <a href="https://docs.google.com/spreadsheets/d/1bZPoM5g9n9flcqjbw_JaBLB4Uk1TOJWNnENre2YBqDo/edit?gid=1714008600"
+      <a href="https://docs.google.com/spreadsheets/d/1HJS_uKNL-rild8HLWE4EMsWiis2I7jMiF8OK2uY_DwM/edit?gid=1696911585"
          target="_blank"
          style="font-size:12px;color:var(--mp-blue);font-weight:600;text-decoration:none">
         ↗ Ver planilla completa en Sheets
       </a>
+    </div>
+  </div>
+
+
+  <!-- VACACIONES -->
+  <div id="vacaciones" class="page">
+    <button class="btn-back" onclick="navTo('inicio')">← Inicio</button>
+    <div class="page-header">
+      <div class="page-title">🌴 Vacaciones</div>
+      <div class="page-subtitle">Consultá tu saldo de días y solicitá tus vacaciones</div>
+    </div>
+    <div class="tab-container">
+      <div class="panel-header">
+        <span class="panel-header-title">Portal de Vacaciones</span>
+        <a class="panel-ext-link" href="https://mjochoa87.github.io/Principalidad_Vacaciones/vacaciones_principalidad.html" target="_blank">↗ Abrir en pestaña nueva</a>
+      </div>
+      <iframe class="panel-iframe" src="https://mjochoa87.github.io/Principalidad_Vacaciones/vacaciones_principalidad.html" loading="lazy" style="display:block; width:100%; height:calc(100vh - 300px); min-height:680px; border:none;"></iframe>
     </div>
   </div>
 
@@ -1259,30 +1372,38 @@
     '2026-09-21':{t:['A','M','T'],p:38},'2026-09-24':{t:['A','F','T'],p:37},
     '2026-09-25':{t:['M','F'],p:25},'2026-09-28':{t:['A','F','T'],p:37},
     '2026-09-30':{t:['A','M','F'],p:38},
-    '2026-10-01':{t:['M','T'],p:25},'2026-10-05':{t:['M','F','T'],p:37},
-    '2026-10-08':{t:['A','M','F'],p:38},'2026-10-09':{t:['A','T'],p:25},
-    '2026-10-12':{feriado:'Diversidad Cultural'},'2026-10-14':{t:['A','F','T'],p:37},
-    '2026-10-15':{t:['A','M','F'],p:38},'2026-10-19':{t:['A','M','T'],p:38},
-    '2026-10-22':{t:['A','F','T'],p:37},'2026-10-23':{t:['M','F'],p:25},
-    '2026-10-26':{t:['A','F','T'],p:37},'2026-10-28':{t:['A','M','F'],p:38},
-    '2026-10-29':{t:['M','T'],p:25},
-    '2026-11-02':{t:['M','F','T'],p:37},'2026-11-05':{t:['A','M','F'],p:38},
-    '2026-11-06':{t:['A','T'],p:25},'2026-11-09':{t:['A','M','F'],p:38},
-    '2026-11-11':{t:['A','F','T'],p:37},'2026-11-12':{t:['M','T'],p:25},
-    '2026-11-16':{t:['A','M','T'],p:38},'2026-11-19':{t:['A','F','T'],p:37},
-    '2026-11-20':{feriado:'Soberanía'},'2026-11-23':{t:['A','F','T'],p:37},
-    '2026-11-25':{t:['A','M','F'],p:38},'2026-11-26':{t:['M','T'],p:25},
-    '2026-11-30':{t:['M','F','T'],p:37},
-    '2026-12-03':{t:['A','M','F'],p:38},'2026-12-04':{t:['A','T'],p:25},
-    '2026-12-07':{t:['A','M','F'],p:38},'2026-12-09':{t:['A','F','T'],p:37},
-    '2026-12-10':{t:['M','T'],p:25},'2026-12-14':{t:['A','M','T'],p:38},
-    '2026-12-17':{t:['A','F','T'],p:37},'2026-12-18':{t:['M','F'],p:25},
-    '2026-12-21':{t:['A','F','T'],p:37},'2026-12-23':{t:['A','M','F'],p:38},
-    '2026-12-24':{t:['M','T'],p:25},'2026-12-25':{feriado:'Navidad'}
+    '2026-10-01':{t:['M','T'],p:25},
+    '2026-10-05':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-10-08':{t:['M','F','T'],u:['X','A'],p:39,up:20},
+    '2026-10-12':{feriado:'Diversidad Cultural'},
+    '2026-10-14':{t:['A','M','T'],u:['X','F'],p:39,up:20},
+    '2026-10-16':{t:['A','M','X'],u:['F','T'],p:33,up:26},
+    '2026-10-19':{t:['A','F','X'],u:['M','T'],p:33,up:26},
+    '2026-10-22':{t:['A','F','T'],u:['X','M'],p:39,up:20},
+    '2026-10-26':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-10-28':{t:['A','M','F'],u:['X','T'],p:39,up:20},
+    '2026-11-02':{t:['A','F','X'],u:['M','T'],p:33,up:26},
+    '2026-11-05':{t:['M','F','T'],u:['X','A'],p:39,up:20},
+    '2026-11-09':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-11-11':{t:['A','M','T'],u:['X','F'],p:39,up:20},
+    '2026-11-16':{t:['A','F','X'],u:['M','T'],p:33,up:26},
+    '2026-11-19':{t:['A','F','T'],u:['X','M'],p:39,up:20},
+    '2026-11-23':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-11-25':{t:['A','M','F'],u:['X','T'],p:39,up:20},
+    '2026-11-30':{t:['A','F','X'],u:['M','T'],p:33,up:26},
+    '2026-12-03':{t:['M','F','T'],u:['X','A'],p:39,up:20},
+    '2026-12-07':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-12-08':{feriado:'Inmaculada Concepción'},
+    '2026-12-09':{t:['A','M','T'],u:['X','F'],p:39,up:20},
+    '2026-12-14':{t:['A','F','X'],u:['M','T'],p:33,up:26},
+    '2026-12-17':{t:['A','F','T'],u:['X','M'],p:39,up:20},
+    '2026-12-21':{t:['M','T','X'],u:['A','F'],p:33,up:26},
+    '2026-12-23':{t:['A','M','F'],u:['X','T'],p:39,up:20},
+    '2026-12-25':{feriado:'Navidad'}
   };
   const PRES_MONTHS=[{n:'Julio',m:7},{n:'Agosto',m:8},{n:'Septiembre',m:9},{n:'Octubre',m:10},{n:'Noviembre',m:11},{n:'Diciembre',m:12}];
   const PRES_DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const PRES_TNAMES={M:'Majo',A:'Ani',F:'Fran',T:'Tomi'};
+  const PRES_TNAMES={M:'Majo',A:'Ani',F:'Fran',T:'Tomi',X:'Fausto'};
 
   function initPres(){
     const nav=document.getElementById('presMonthNav');
@@ -1310,8 +1431,14 @@
       else if(info?.feriado) h+=`<div class="feriado-label">🎉 ${info.feriado}</div>`;
       else if(info?.t){
         h+='<div class="pres-teams">'+info.t.map(t=>`<span class="pres-chip pres-chip-${t}">${PRES_TNAMES[t]}</span>`).join('')+'</div>';
-        const e=info.p>40?'🔴':info.p>=35?'🟡':'🟢';
-        h+=`<div class="pres-total">${e} ${info.p}p</div>`;
+        if(info.u){
+          if(info.u.length) h+='<div class="pres-up-label">↑ Sube arriba</div><div class="pres-teams up">'+info.u.map(t=>`<span class="pres-chip pres-chip-${t}">${PRES_TNAMES[t]}</span>`).join('')+'</div>';
+          const e=info.p>39?'🔴':info.p===39?'🟡':'🟢';
+          h+=`<div class="pres-total">${e} ${info.p}p cowork · ↑${info.up}p</div>`;
+        } else {
+          const e=info.p>40?'🔴':info.p>=35?'🟡':'🟢';
+          h+=`<div class="pres-total">${e} ${info.p}p</div>`;
+        }
       }
       h+='</div>';
     }
@@ -1323,3 +1450,4 @@
 </script>
 </body>
 </html>
+
